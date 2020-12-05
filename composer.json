@@ -1,0 +1,39 @@
+{
+    "name": "era269/true-object",
+    "description": "Object with message communication interface",
+    "type": "library",
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.4",
+        "symfony/uid": "^5.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4",
+        "phpstan/phpstan": "^0.12.57"
+    },
+    "authors": [
+        {
+            "name": "Yuriy Antonuyk",
+            "email": "yuriy.mihaylovich.antonyuk@gmail.com"
+        },
+        {
+            "name": "Dmitriy Ivanov",
+            "email": "dmitry.ivanov.zagranju@gmail.com"
+        }
+    ],
+    "config": {
+        "platform": {
+            "php": "7.4.0"
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
