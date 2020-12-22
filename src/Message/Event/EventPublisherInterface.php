@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject\Message\Event;
+namespace Era269\Microobject\Message\Event;
 
-use Era269\TrueObject\Message\EventInterface;
+use Era269\Microobject\Message\EventInterface;
 
 interface EventPublisherInterface
 {

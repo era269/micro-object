@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject\Traits;
+namespace Era269\Microobject\Traits;
 
-use Era269\TrueObject\Message\EventInterface;
-use Era269\TrueObject\Message\Event\EventSubscriberInterface;
+use Era269\Microobject\Message\EventInterface;
+use Era269\Microobject\Message\Event\EventSubscriberInterface;
 use SplObjectStorage;
 
 /*
- * implements \Era269\TrueObject\SubjectInterface
+ * implements \Era269\Microobject\SubjectInterface
  */
 
 trait CanApplyAndPublishEventsTrait
@@ -22,7 +22,7 @@ trait CanApplyAndPublishEventsTrait
     private SplObjectStorage $subscribers; // ->php8 WeakMap to keep subscriptions only on existing objects
 
     /**
-     * @var SplObjectStorage&\Era269\TrueObject\Message\EventInterface[]
+     * @var SplObjectStorage&\Era269\Microobject\Message\EventInterface[]
      */
     private SplObjectStorage $publishedEvents;
 

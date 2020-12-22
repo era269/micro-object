@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject\Traits;
+namespace Era269\Microobject\Traits;
 
 use ReflectionClass;
 use ReflectionException;

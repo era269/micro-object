@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject\Exception;
+namespace Era269\Microobject\Exception;
 
+use Era269\Microobject\NormalizableInterface;
 use Throwable;
 
-interface ExceptionInterface extends Throwable
+interface ExceptionInterface extends Throwable, NormalizableInterface
 {
 
 }

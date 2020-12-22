@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject;
+namespace Era269\Microobject;
 
 interface NormalizableInterface
 {
@@ -11,5 +11,5 @@ interface NormalizableInterface
     /**
      * @return array<string, string|int|array|bool|float|null>
      */
-    public function normalized(): array;
+    public function normalize(): array;
 }

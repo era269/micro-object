@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject\Traits;
+namespace Era269\Microobject\Traits;
 
-use Era269\TrueObject\NormalizableInterface;
+use Era269\Microobject\NormalizableInterface;
 
 trait AbstractNormalizableTrait
 {
     /**
      * @return array<string, string|int|array|bool|float|null>
      */
-    public function normalized(): array
+    public function normalize(): array
     {
         return [NormalizableInterface::FIELD_NAME_DOMAIN_MODEL_NAME => static::class] + $this->getNormalized();
     }

@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject\Message;
+namespace Era269\Microobject\Message;
 
-use Era269\TrueObject\Message\Event\EventId;
-use Era269\TrueObject\MessageInterface;
-use Era269\TrueObject\NormalizableInterface;
+use Era269\Microobject\MessageInterface;
 
-interface EventInterface extends MessageInterface, NormalizableInterface
+interface EventInterface extends MessageInterface
 {
-    public function getId(): EventId;
+    public function getId(): MessageIdInterface;
 }

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject;
+namespace Era269\Microobject;
 
 interface SubjectCollectionAwareInterface
 {
-    public function attachSubject(TrueObjectInterface ...$subjects)
-    : void;
+    public function withSubjectCollection(SubjectCollectionInterface $subjectCollection): void;
 
-    public function detachSubject(TrueObjectInterface ...$subjects)
-    : void;
+    public function attachSubject(MicroobjectInterface ...$subjects): void;
+
+    public function detachSubject(MicroobjectInterface ...$subjects): void;
 }

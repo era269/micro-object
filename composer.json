@@ -1,11 +1,10 @@
 {
-    "name": "era269/true-object",
-    "description": "Object with message communication interface",
+    "name": "era269/micro-object",
+    "description": "Object <=> Service => MicroService <=> Microobject",
     "type": "library",
     "prefer-stable": true,
     "require": {
-        "php": "^7.4",
-        "symfony/uid": "^5.1"
+        "php": "^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.4",
@@ -23,17 +22,20 @@
     ],
     "config": {
         "platform": {
-            "php": "7.4.0"
+            "php": "8.0"
         },
         "optimize-autoloader": true,
         "sort-packages": true
     },
     "autoload": {
-        "classmap": ["src/"]
+        "psr-4": {
+            "Era269\\Microobject\\": "src",
+            "Era269\\Example\\": "example"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Era269\\Microobject\\Tests\\": "tests"
         }
     }
 }

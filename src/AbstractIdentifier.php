@@ -2,46 +2,48 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject;
-
-use RuntimeException;
+namespace Era269\Microobject;
 
 abstract class AbstractIdentifier extends AbstractNormalizableModel implements IdentifierInterface
 {
     private string $id;
 
-    public function __construct()
+    private function __construct(string $id = null)
     {
-        $uuid = uuid_create();
-        if (is_null($uuid)) {
-            throw new RuntimeException('Cannot generate uuid');
-        }
-        $this->id = $uuid;
+        $this->id = $id ?? $this->generateId();
     }
 
-    public function equalsString(string $id)
-    : bool
+    public static function create(): static
+    {
+        return new static();
+    }
+
+    public static function denormalize(string $id): static
+    {
+        return new static($id);
+    }
+
+    abstract protected function generateId(): string;
+
+    public function equalsString(string $id): bool
     {
         return $this->toString() === $id;
     }
 
-    public function equals(IdentifierInterface $other)
-    : bool
+    private function toString(): string
+    {
+        return $this->id;
+    }
+
+    public function equals(IdentifierInterface $other): bool
     {
         return $other->equalsString($this->toString());
     }
 
-    protected function getNormalized()
-    : array
+    protected function getNormalized(): array
     {
         return [
             'id' => $this->id
         ];
-    }
-
-    private function toString()
-    : string
-    {
-        return $this->id;
     }
 }
