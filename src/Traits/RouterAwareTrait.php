@@ -31,6 +31,9 @@ trait RouterAwareTrait
         return $this->router->send($message);
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     final protected function attachToRouter(RouterAwareInterface $routerAware): void
     {
         $routerAware->withRouter($this->router);

@@ -8,8 +8,9 @@ use Era269\Microobject\Exception\ExceptionInterface;
 use Era269\Microobject\Identifier\IdentifierCollection;
 use Era269\Microobject\Message\ReplyInterface;
 use Era269\Microobject\Traits\IdentifierCollectionAwareTrait;
+use Traversable;
 
-abstract class AbstractMicroobjectCollection extends AbstractMicroobject
+abstract class AbstractMicroobjectCollection extends AbstractMicroobject implements CollectionInterface
 {
     use IdentifierCollectionAwareTrait;
 
@@ -21,29 +22,33 @@ abstract class AbstractMicroobjectCollection extends AbstractMicroobject
         $this->withIdentifierCollection(new IdentifierCollection(...$ids));
     }
 
-    /**
-     * @throws ExceptionInterface
-     */
-    final protected function attach(MicroobjectInterface $microobject): void
+    public function count(): int
     {
-        $this->getRepository()->attach($microobject);
-        $this->attachToRouter($microobject);
-        $this->getIdentifierCollection()->attach(
-            $microobject->getId()
-        );
-        // ToDo: maybe not necessary
-        $this->setCurrent($microobject);
+        return $this->getRepository()->count();
     }
 
     abstract protected function getRepository(): RepositoryInterface;
 
+    public function getIterator(): Traversable
+    {
+        return $this->getIdentifierCollection();
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
+    final protected function attach(MicroobjectInterface $microobject = null): void
+    {
+        $this->getRepository()->attach($microobject);
+        $this->attachToRouter($microobject);
+        // ToDo: maybe not necessary
+        $this->setCurrent($microobject);
+    }
+
     final protected function setCurrent(MicroobjectInterface $microobject): void
     {
-        // ToDo: maybe can be removed because we call $collectionItem->process directly
         $this->unsetCurrent();
-
         $this->current = $microobject;
-        $this->attachToRouter($this->current);
     }
 
     final protected function unsetCurrent(): void
@@ -53,17 +58,39 @@ abstract class AbstractMicroobjectCollection extends AbstractMicroobject
         }
     }
 
+    final protected function attachIdentifier(IdentifierInterface $identifier): void
+    {
+        $this->getIdentifierCollection()->attach(
+            $identifier
+        );
+    }
+
+    final protected function detachIdentifier(IdentifierInterface $identifier): void
+    {
+        $this->getIdentifierCollection()->detach(
+            $identifier
+        );
+    }
+
     /**
      * @throws ExceptionInterface
      */
-    final protected function detach(IdentifierInterface $id): void
+    final protected function detach(MicroobjectInterface $microobject): void
     {
-        $microobject = $this->getOffset($id);
         $this->getRepository()->detach($microobject);
         $this->detachFromRouter($microobject);
-        $this->getIdentifierCollection()->detach(
-            $id
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
+    final protected function processCollectionItemMessage(MessageInterface $message, IdentifierInterface $identifier): ReplyInterface
+    {
+        $microobject = $this->getOffset($identifier);
+        $this->setCurrent(
+            $microobject
         );
+        return $microobject->process($message);
     }
 
     /**
@@ -72,17 +99,6 @@ abstract class AbstractMicroobjectCollection extends AbstractMicroobject
     final protected function getOffset(IdentifierInterface $id): MicroobjectInterface
     {
         return $this->getRepository()->get($id);
-    }
-
-    /**
-     * @throws ExceptionInterface
-     */
-    final protected function processCollectionItemMessage(MessageInterface $message, MicroobjectInterface $collectionItem): ReplyInterface
-    {
-        $this->setCurrent(
-            $collectionItem
-        );
-        return $collectionItem->process($message);
     }
 
     protected function getNormalized(): array
@@ -94,4 +110,6 @@ abstract class AbstractMicroobjectCollection extends AbstractMicroobject
     }
 
     abstract public function getId(): IdentifierInterface;
+
+
 }

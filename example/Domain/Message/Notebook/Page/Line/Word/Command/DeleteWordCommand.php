@@ -10,9 +10,9 @@ use Era269\Example\Domain\Notebook\Page\Line\Word\WordId;
 use Era269\Example\Domain\Notebook\Page\PageId;
 use Era269\Microobject\DenormalizableInterface;
 
-final class RemoveWordCommand extends AbstractWordMessage implements DenormalizableInterface
+final class DeleteWordCommand extends AbstractWordMessage implements DenormalizableInterface
 {
-    public static function denormalize(array $data): self
+    public static function denormalize(array $data): static
     {
         return new self(
             NotebookId::denormalize($data['notebookId']),

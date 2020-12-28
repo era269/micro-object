@@ -14,7 +14,7 @@ use Era269\Example\Domain\Notebook\Page\PageId;
 use Era269\Microobject\DenormalizableInterface;
 use Era269\Microobject\Exception\ExceptionInterface;
 
-final class AddWordCommand extends AbstractWordCollectionMessage implements WordAwareInterface, DenormalizableInterface
+final class AttachWordCollectionCommand extends AbstractWordCollectionMessage implements WordAwareInterface, DenormalizableInterface
 {
     use WordAwareTrait;
 
@@ -31,7 +31,7 @@ final class AddWordCommand extends AbstractWordCollectionMessage implements Word
      * @return static
      * @throws ExceptionInterface
      */
-    public static function denormalize(array $data): self
+    public static function denormalize(array $data): static
     {
         return new self(
             NotebookId::denormalize($data['notebookId']),

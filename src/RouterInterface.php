@@ -14,6 +14,9 @@ interface RouterInterface
 
     public function detach(MicroobjectInterface $microobject): void;
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function fill(RouterInterface $router): void;
 
     /**

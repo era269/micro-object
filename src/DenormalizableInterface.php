@@ -14,5 +14,5 @@ interface DenormalizableInterface extends NormalizableInterface
      * @throws DenormalizingException
      * @throws TypeError
      */
-    public static function denormalize(array $data): self;
+    public static function denormalize(array $data): static;
 }

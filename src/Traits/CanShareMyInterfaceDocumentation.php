@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Era269\Microobject\Traits;
 
 
-use Era269\Microobject\Message\ReplyInterface;
 use Era269\Microobject\MessageInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -50,25 +49,10 @@ trait CanShareMyInterfaceDocumentation
 
     private function isMessageProcessingMethod(ReflectionMethod $method): bool
     {
-        return /*$this->isEventProcessingMethod($method)
-            ||*/ $this->isMessageWithReplyProcessingMethod($method);
-    }
-
-    private function isMessageWithReplyProcessingMethod(ReflectionMethod $method): bool
-    {
         return $method->isPublic() &&
-            is_subclass_of((string)$method->getReturnType(), ReplyInterface::class) &&
             $this->isMethodHasParameterSubclassOf($method, MessageInterface::class) &&
             $method->getName() !== 'process';
     }
-
-//    private function isEventProcessingMethod(ReflectionMethod $method): bool
-//    {
-//        return $method->isPublic() &&
-//            (string)$method->getReturnType() === 'void' &&
-//            $this->isMethodHasParameterSubclassOf($method, EventInterface::class)
-//            ;
-//    }
 
     private function isMethodHasParameterSubclassOf(ReflectionMethod $method, string $className): bool
     {

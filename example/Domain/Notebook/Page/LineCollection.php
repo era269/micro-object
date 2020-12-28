@@ -6,14 +6,15 @@ namespace Era269\Example\Domain\Notebook\Page;
 
 
 use Era269\Example\Domain\BaseIdentifier;
-use Era269\Example\Domain\Message\Notebook\Page\Line\Command\AddLineCommand;
-use Era269\Example\Domain\Message\Notebook\Page\Line\Command\RemoveLineCommand;
-use Era269\Example\Domain\Message\Notebook\Page\Line\Event\LineAddedEvent;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Command\AttachLineCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Command\DetachLineCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Event\LineAttachedCollectionEvent;
 use Era269\Example\Domain\Message\Notebook\Page\Line\LineMessageInterface;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Query\GetLineQuery;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Reply\LineCollectionReply;
 use Era269\Example\Domain\Notebook\Page\Line\LineId;
 use Era269\Example\Domain\Notebook\Page\Line\LineRepositoryInterface;
+use Era269\Example\Domain\Notebook\Page\Line\Word\Message\Event\LineDetachedCollectionEvent;
 use Era269\Microobject\AbstractMicroobjectCollection;
 use Era269\Microobject\IdentifierInterface;
 use Era269\Microobject\Message\Reply\PositiveReply;
@@ -60,24 +61,50 @@ final class LineCollection extends AbstractMicroobjectCollection implements Line
         );
     }
 
-    public function addLine(AddLineCommand $command): ReplyInterface
+    public function attachLine(AttachLineCollectionCommand $command): ReplyInterface
     {
-        $this->applyAndPublishThat(new LineAddedEvent($command));
+        $this->attach(
+            $command->getLine()
+        );
+        $this->processAndSend(
+            new LineAttachedCollectionEvent($command)
+        );
         return new PositiveReply($command);
+    }
+
+    public function applyLineAttachedEvent(LineAttachedCollectionEvent $event): void
+    {
+        $this->attachIdentifier(
+            $event->getLineId()
+        );
     }
 
     public function processLineMessages(LineMessageInterface $message): ReplyInterface
     {
         return $this->processCollectionItemMessage(
             $message,
-            $this->getOffset($message->getLineId())
+            $message->getLineId()
         );
     }
 
-    public function removeLine(RemoveLineCommand $command): ReplyInterface
+    public function detachLine(DetachLineCollectionCommand $command): ReplyInterface
     {
-        $this->detach($command->getLineId());
+        $this->detach(
+            $this->getOffset(
+                $command->getLineId()
+            )
+        );
+        $this->processAndSend(
+            new LineDetachedCollectionEvent($command)
+        );
         return new PositiveReply($command);
+    }
+
+    public function applyLineDetachedEvent(LineDetachedCollectionEvent $event): void
+    {
+        $this->detachIdentifier(
+            $event->getLineId()
+        );
     }
 
     public function getId(): IdentifierInterface

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace Era269\Example\Domain\Notebook\Page\Word\Message\Event;
+namespace Era269\Example\Domain\Message\Notebook\Page\Event;
 
 
 use Era269\Example\Domain\Message\Notebook\Page\AbstractPageMessage;

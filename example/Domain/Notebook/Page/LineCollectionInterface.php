@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Era269\Example\Domain\Notebook\Page;
 
-use Era269\Example\Domain\Message\Notebook\Page\Line\Command\AddLineCommand;
-use Era269\Example\Domain\Message\Notebook\Page\Line\Command\RemoveLineCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Command\AttachLineCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Command\DetachLineCollectionCommand;
 use Era269\Example\Domain\Message\Notebook\Page\Line\LineMessageInterface;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Query\GetLineQuery;
 use Era269\Microobject\Exception\ExceptionInterface;
@@ -21,12 +21,12 @@ interface LineCollectionInterface extends MicroobjectCollectionInterface
     /**
      * @throws ExceptionInterface
      */
-    public function addLine(AddLineCommand $command): ReplyInterface;
+    public function attachLine(AttachLineCollectionCommand $command): ReplyInterface;
 
     /**
      * @throws ExceptionInterface
      */
-    public function removeLine(RemoveLineCommand $command): ReplyInterface;
+    public function detachLine(DetachLineCollectionCommand $command): ReplyInterface;
 
     /**
      * @throws ExceptionInterface

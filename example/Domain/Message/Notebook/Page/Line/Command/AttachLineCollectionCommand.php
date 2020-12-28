@@ -11,7 +11,7 @@ use Era269\Example\Domain\Notebook\Page\Line\Traits\LineAwareTrait;
 use Era269\Example\Domain\Notebook\Page\LineInterface;
 use Era269\Example\Domain\Notebook\Page\PageId;
 
-final class AddLineCommand extends AbstractLineCollectionMessage implements LineCollectionMessageInterface, LineAwareInterface
+final class AttachLineCollectionCommand extends AbstractLineCollectionMessage implements LineCollectionMessageInterface, LineAwareInterface
 {
     use LineAwareTrait;
 
@@ -20,4 +20,13 @@ final class AddLineCommand extends AbstractLineCollectionMessage implements Line
         parent::__construct($notebookId, $pageId);
         $this->setLine($line);
     }
+
+    protected function getNormalized(): array
+    {
+        return parent::getNormalized() + [
+                'line' => $this->getLine()->normalize()
+            ];
+    }
+
+
 }

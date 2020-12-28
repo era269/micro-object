@@ -6,18 +6,17 @@ namespace Era269\Example\Domain\Notebook;
 
 
 use Era269\Example\Domain\BaseIdentifier;
-use Era269\Example\Domain\Message\Notebook\Page\Command\AddPageCommand;
-use Era269\Example\Domain\Message\Notebook\Page\Command\RemovePageCommand;
-use Era269\Example\Domain\Message\Notebook\Page\Event\PageAddedEvent;
+use Era269\Example\Domain\Message\Notebook\Page\Command\AttachPageCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Command\DetachPageCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Event\PageAttachedCollectionEvent;
+use Era269\Example\Domain\Message\Notebook\Page\Event\PageDetachedCollectionEvent;
 use Era269\Example\Domain\Message\Notebook\Page\PageMessageInterface;
 use Era269\Example\Domain\Message\Notebook\Page\Query\GetPageQuery;
 use Era269\Example\Domain\Message\Notebook\Page\Reply\PageCollectionReply;
 use Era269\Example\Domain\Notebook\Page\PageId;
 use Era269\Example\Domain\Notebook\Page\PageRepositoryInterface;
-use Era269\Example\Domain\Notebook\Page\Word\Message\Event\PageRemovedEvent;
 use Era269\Microobject\AbstractMicroobjectCollection;
 use Era269\Microobject\IdentifierInterface;
-use Era269\Microobject\Message\Reply\EmptyReply;
 use Era269\Microobject\Message\Reply\PositiveReply;
 use Era269\Microobject\Message\ReplyInterface;
 use Era269\Microobject\RepositoryInterface;
@@ -65,41 +64,49 @@ final class PageCollection extends AbstractMicroobjectCollection implements Page
         );
     }
 
-    public function addPage(AddPageCommand $command): ReplyInterface
+    public function attachPage(AttachPageCollectionCommand $command): ReplyInterface
     {
-        $this->applyAndPublishThat(new PageAddedEvent($command));
+        $this->attach(
+            $command->getPage()
+        );
+        $this->processAndSend(
+            new PageAttachedCollectionEvent($command)
+        );
         return new PositiveReply($command);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function applyPageAddedEvent(PageAddedEvent $event): ReplyInterface
+    public function applyPageAttachedEvent(PageAttachedCollectionEvent $event): void
     {
-        $this->attach($event->getPage());
-        return new EmptyReply($event);
+        $this->attachIdentifier(
+            $event->getPageId()
+        );
     }
 
     public function processPageMessages(PageMessageInterface $message): ReplyInterface
     {
         return $this->processCollectionItemMessage(
             $message,
-            $this->getOffset($message->getPageId())
+            $message->getPageId()
         );
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function applyPageRemovedEvent(PageRemovedEvent $event): ReplyInterface
+    public function applyPageRemovedEvent(PageDetachedCollectionEvent $event): void
     {
-        $this->detach($event->getPageId());
-        return new EmptyReply($event);
+        $this->detachIdentifier(
+            $event->getPageId()
+        );
     }
 
-    public function removePage(RemovePageCommand $command): ReplyInterface
+    public function detachPage(DetachPageCollectionCommand $command): ReplyInterface
     {
-        $this->applyAndPublishThat(new PageRemovedEvent($command));
+        $this->detach(
+            $this->getOffset(
+                $command->getPageId()
+            )
+        );
+        $this->processAndSend(
+            new PageDetachedCollectionEvent($command)
+        );
         return new PositiveReply($command);
     }
 

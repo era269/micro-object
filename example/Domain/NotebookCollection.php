@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Era269\Example\Domain;
 
 
-use Era269\Example\Domain\Message\Notebook\Command\AddNotebookCommand;
-use Era269\Example\Domain\Message\Notebook\Command\RemoveNotebookCommand;
+use Era269\Example\Domain\Message\Notebook\Command\AttachNotebookCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Command\DetachNotebookCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Event\NotebookAttachedCollectionEvent;
+use Era269\Example\Domain\Message\Notebook\Event\NotebookDetachedCollectionEvent;
 use Era269\Example\Domain\Message\Notebook\NotebookMessageInterface;
 use Era269\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
 use Era269\Example\Domain\Message\Notebook\Reply\NotebookCollectionReply;
@@ -58,30 +60,50 @@ final class NotebookCollection extends AbstractMicroobjectCollection implements 
         );
     }
 
-    public function addNotebook(AddNotebookCommand $command): ReplyInterface
+    public function attachNotebook(AttachNotebookCollectionCommand $command): ReplyInterface
     {
-        $this->attach($command->getNotebook());
+        $this->attach(
+            $command->getNotebook()
+        );
+        $this->processAndSend(
+            new NotebookAttachedCollectionEvent($command)
+        );
         return new PositiveReply($command);
     }
 
-    public function applyNotebookAdded(AddNotebookCommand $command): ReplyInterface
+    public function applyNotebookAttached(NotebookAttachedCollectionEvent $event): void
     {
-        $this->attach($command->getNotebook());
-        return new PositiveReply($command);
+        $this->attachIdentifier(
+            $event->getNotebookId()
+        );
     }
 
     public function processNotebookMessage(NotebookMessageInterface $message): ReplyInterface
     {
         return $this->processCollectionItemMessage(
             $message,
-            $this->getOffset($message->getNotebookId())
+            $message->getNotebookId()
         );
     }
 
-    public function removeNotebook(RemoveNotebookCommand $command): ReplyInterface
+    public function detachNotebook(DetachNotebookCollectionCommand $command): ReplyInterface
     {
-        $this->detach($command->getNotebookId());
+        $this->detach(
+            $this->getOffset(
+                $command->getNotebookId()
+            )
+        );
+        $this->processAndSend(
+            new NotebookDetachedCollectionEvent($command)
+        );
         return new PositiveReply($command);
+    }
+
+    public function applyNotebookDetached(NotebookAttachedCollectionEvent $event): void
+    {
+        $this->attachIdentifier(
+            $event->getNotebookId()
+        );
     }
 
     public function getId(): IdentifierInterface

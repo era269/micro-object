@@ -8,6 +8,7 @@ namespace Era269\Example\Domain\Notebook\Page\Line;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\CreateWordCommand;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\RevertWordCommand;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Event\WordCreatedEvent;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Event\WordDeletedEvent;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Event\WordUpdatedEvent;
 use Era269\Example\Domain\Message\Notebook\Page\Line\WordReply\WordCollectionReply;
 use Era269\Example\Domain\Notebook\Page\Line\Word\WordId;
@@ -33,13 +34,16 @@ final class Word extends AbstractMicroobject implements WordInterface
     public static function create(CreateWordCommand $command): self
     {
         $self = new self();
-        $self->applyAndPublishThat(
+        $self->processAndSend(
             new WordCreatedEvent($command, $command->getWordId())
         );
         return $self;
     }
 
-    public static function denormalize(array $data): self
+    /**
+     * @inheritDoc
+     */
+    public static function denormalize(array $data): static
     {
         $self = new self();
         $self->setId(WordId::denormalize($data['id']));
@@ -57,11 +61,17 @@ final class Word extends AbstractMicroobject implements WordInterface
         $this->letters = $letters;
     }
 
-    public static function reconstitute(EventInterface ...$events): self
+    private function clearLetters(): void
+    {
+        $this->setLetters('');
+    }
+
+
+    public static function reconstitute(EventInterface ...$events): static
     {
         $self = new self();
         foreach ($events as $event) {
-            $self->applyThat($event);
+            $self->process($event);
         }
         return $self;
     }
@@ -70,6 +80,13 @@ final class Word extends AbstractMicroobject implements WordInterface
     {
         $this->setId($event->getWordId());
         $this->setLetters($event->getLetters());
+
+        return new EmptyReply($event);
+    }
+
+    public function applyWordDeletedEvent(WordDeletedEvent $event): ReplyInterface
+    {
+        $this->clearLetters();
 
         return new EmptyReply($event);
     }
@@ -87,7 +104,7 @@ final class Word extends AbstractMicroobject implements WordInterface
     public function revert(RevertWordCommand $command): ReplyInterface
     {
         $event = new WordUpdatedEvent($command, strrev($this->getLetters()));
-        $this->applyAndPublishThat(
+        $this->processAndSend(
             $event
         );
         return new WordCollectionReply($command, $event);

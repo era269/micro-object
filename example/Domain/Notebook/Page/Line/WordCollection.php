@@ -6,18 +6,20 @@ namespace Era269\Example\Domain\Notebook\Page\Line;
 
 
 use Era269\Example\Domain\BaseIdentifier;
-use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\AddWordCommand;
-use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\RemoveWordCommand;
-use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Event\WordAddedEvent;
-use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Event\WordRemovedEvent;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\AttachWordCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\DetachWordCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Event\WordAttachedCollectionEvent;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Event\WordDeletedEvent;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Event\WordDetachedCollectionEvent;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Query\GetWordQuery;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Word\WordMessageInterface;
 use Era269\Example\Domain\Message\Notebook\Page\Line\WordReply\WordCollectionReply;
 use Era269\Example\Domain\Notebook\Page\Line\Word\WordId;
 use Era269\Example\Domain\Notebook\Page\Line\Word\WordRepositoryInterface;
 use Era269\Microobject\AbstractMicroobjectCollection;
+use Era269\Microobject\Exception\ExceptionInterface;
 use Era269\Microobject\IdentifierInterface;
-use Era269\Microobject\Message\Reply\EmptyReply;
+use Era269\Microobject\Message\EventInterface;
 use Era269\Microobject\Message\Reply\PositiveReply;
 use Era269\Microobject\Message\ReplyInterface;
 use Era269\Microobject\RepositoryInterface;
@@ -53,6 +55,20 @@ final class WordCollection extends AbstractMicroobjectCollection implements Word
     }
 
     /**
+     * @throws ExceptionInterface
+     */
+    public static function reconstitute(WordRepositoryInterface $repository, EventInterface ...$events): self
+    {
+        $self = new self();
+        foreach ($events as $event) {
+            $self->process($event);
+        }
+        $self->setRepository($repository);
+
+        return $self;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getWord(GetWordQuery $query): ReplyInterface
@@ -66,43 +82,53 @@ final class WordCollection extends AbstractMicroobjectCollection implements Word
     /**
      * @inheritDoc
      */
-    public function addWord(AddWordCommand $command): ReplyInterface
+    public function attachWord(AttachWordCollectionCommand $command): ReplyInterface
     {
-        $this->applyAndPublishThat(
-            new WordAddedEvent($command)
+        $this->attach(
+            $command->getWord()
+        );
+        $this->processAndSend(
+            new WordAttachedCollectionEvent($command)
         );
         return new PositiveReply($command);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function applyWordAddedEvent(WordAddedEvent $event): ReplyInterface
+    public function applyWordAttachedEvent(WordAttachedCollectionEvent $event): void
     {
-        $this->attach(
-            $event->getWord()
-        );
-        return new EmptyReply($event);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function applyWordRemovedEvent(WordRemovedEvent $event): ReplyInterface
-    {
-        $this->detach(
+        $this->attachIdentifier(
             $event->getWordId()
         );
-        return new EmptyReply($event);
+    }
+
+    public function applyWordDetachedEvent(WordDetachedCollectionEvent $event): void
+    {
+        $this->detachIdentifier(
+            $event->getWordId()
+        );
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
+    public function applyWordDeletedEvent(WordDeletedEvent $event): void
+    {
+        $this->process(
+            DetachWordCollectionCommand::formWordMessage($event)
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function removeWord(RemoveWordCommand $command): ReplyInterface
+    public function detachWord(DetachWordCollectionCommand $command): ReplyInterface
     {
-        $this->applyAndPublishThat(
-            new WordRemovedEvent($command)
+        $this->detach(
+            $this->getOffset(
+                $command->getWordId()
+            )
+        );
+        $this->processAndSend(
+            new WordDetachedCollectionEvent($command)
         );
         return new PositiveReply($command);
     }
@@ -114,7 +140,7 @@ final class WordCollection extends AbstractMicroobjectCollection implements Word
     {
         return $this->processCollectionItemMessage(
             $message,
-            $this->getOffset($message->getWordId())
+            $message->getWordId()
         );
     }
 

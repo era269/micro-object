@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Era269\Example\Application\Port;
 
-use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\AddWordCommand;
-use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\RemoveWordCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\AttachWordCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\DetachWordCollectionCommand;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Command\RevertWordCommand;
 use Era269\Example\Domain\Message\Notebook\Page\Line\Word\Query\GetWordQuery;
 use Era269\Example\Infrastructure\Factory\NotebookCollectionFactory;
@@ -28,7 +28,7 @@ final class WordsPort
         return $this->notebookCollectionFactory
             ->restore()
             ->process(
-                AddWordCommand::denormalize($request)
+                AttachWordCollectionCommand::denormalize($request)
             )
             ->normalize();
     }
@@ -56,7 +56,7 @@ final class WordsPort
         return $this->notebookCollectionFactory
             ->restore()
             ->process(
-                RemoveWordCommand::denormalize($request)
+                DetachWordCollectionCommand::denormalize($request)
             )
             ->normalize();
     }

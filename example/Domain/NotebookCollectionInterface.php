@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Era269\Example\Domain;
 
 
-use Era269\Example\Domain\Message\Notebook\Command\AddNotebookCommand;
-use Era269\Example\Domain\Message\Notebook\Command\RemoveNotebookCommand;
+use Era269\Example\Domain\Message\Notebook\Command\AttachNotebookCollectionCommand;
+use Era269\Example\Domain\Message\Notebook\Command\DetachNotebookCollectionCommand;
 use Era269\Example\Domain\Message\Notebook\NotebookMessageInterface;
 use Era269\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
 use Era269\Microobject\Exception\ExceptionInterface;
@@ -24,12 +24,12 @@ interface NotebookCollectionInterface extends MicroobjectCollectionInterface, Id
     /**
      * @throws ExceptionInterface
      */
-    public function addNotebook(AddNotebookCommand $command): ReplyInterface;
+    public function attachNotebook(AttachNotebookCollectionCommand $command): ReplyInterface;
 
     /**
      * @throws ExceptionInterface
      */
-    public function removeNotebook(RemoveNotebookCommand $command): ReplyInterface;
+    public function detachNotebook(DetachNotebookCollectionCommand $command): ReplyInterface;
 
     /**
      * @throws ExceptionInterface

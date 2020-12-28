@@ -6,7 +6,7 @@ namespace Era269\Microobject;
 
 use DateTimeInterface;
 use Era269\Microobject\Exception\ExceptionInterface;
-use Era269\Microobject\Message\EventInterface;
+use Era269\Microobject\Message\Reply\NullReply;
 use Era269\Microobject\Message\ReplyInterface;
 use Era269\Microobject\Router\BaseRouter;
 use Era269\Microobject\Traits\CanDetectIsMethodCallerInstanceOf;
@@ -21,9 +21,21 @@ abstract class AbstractMicroobject extends AbstractNormalizableModel implements 
 
     private DateTimeInterface $updatedAt;
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function __construct(MicroobjectInterface ...$subjects)
     {
         $this->withRouter(new BaseRouter($this, ...$subjects));
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
+    final protected function processAndSend(MessageInterface $message): void
+    {
+        $this->process($message);
+        $this->send($message);
     }
 
     /**
@@ -35,29 +47,7 @@ abstract class AbstractMicroobject extends AbstractNormalizableModel implements 
             return $this->send($message);
         }
         $methodName = $this->getInterfaceDocumentation()[get_class($message)];
-        return $this->$methodName($message);
-    }
-
-    /**
-     * @throws ExceptionInterface
-     */
-    final protected function applyAndPublishThat(EventInterface $event): void
-    {
-        $this->applyThat($event);
-        $this->publishThat($event);
-    }
-
-    /**
-     * @throws ExceptionInterface
-     */
-    final protected function publishThat(EventInterface $event): void
-    {
-        $this->send($event);
-    }
-
-    final protected function applyThat(EventInterface $event): void
-    {
-        $methodName = $this->getInterfaceDocumentation()[get_class($event)];
-        $this->$methodName($event);
+        return $this->$methodName($message)
+            ?? new NullReply($message);
     }
 }

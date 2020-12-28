@@ -119,11 +119,18 @@ class BaseRouter implements RouterInterface
     private function routeProcessingToAllObjects(MessageInterface $message): ReplyInterface
     {
         foreach ($this->processingMap[get_class($message)] as $microobject) {
+            // skip the object which sent that message
+            if ($microobject->getId()->equals($message->getTargetObjectId())) {
+                continue;
+            }
             $reply = $microobject->process($message);
         }
         return $reply ?? new NullReply($message);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function fill(RouterInterface $router): void
     {
         foreach ($this->messageRegistry as $messageId) {
