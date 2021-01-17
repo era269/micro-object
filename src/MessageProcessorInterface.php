@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Era269\Microobject;
 
 
-use Era269\Microobject\Exception\ExceptionInterface;
+use DomainException;
 use Era269\Microobject\Message\ReplyInterface;
 
 interface MessageProcessorInterface
 {
     /**
-     * @throws ExceptionInterface
+     * @throws DomainException
      */
     public function process(MessageInterface $message): ReplyInterface;
 }

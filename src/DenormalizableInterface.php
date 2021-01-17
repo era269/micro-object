@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Era269\Microobject;
 
-use Era269\Microobject\Exception\DenormalizingException;
+use InvalidArgumentException;
 use TypeError;
 
 interface DenormalizableInterface extends NormalizableInterface
 {
     /**
      * @param array[] $data
-     * @throws DenormalizingException
+     * @throws InvalidArgumentException
      * @throws TypeError
      */
     public static function denormalize(array $data): static;

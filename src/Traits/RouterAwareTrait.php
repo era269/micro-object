@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Traits;
 
-use Era269\Microobject\Exception\ExceptionInterface;
+use DomainException;
 use Era269\Microobject\Message\ReplyInterface;
 use Era269\Microobject\MessageInterface;
 use Era269\Microobject\MicroobjectInterface;
@@ -15,6 +15,9 @@ trait RouterAwareTrait
 {
     private RouterInterface $router;
 
+    /**
+     * @inheritDoc
+     */
     final public function withRouter(RouterInterface $router): void
     {
         if (isset($this->router)) {
@@ -24,7 +27,7 @@ trait RouterAwareTrait
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws DomainException
      */
     final protected function send(MessageInterface $message): ReplyInterface
     {
@@ -32,7 +35,7 @@ trait RouterAwareTrait
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws DomainException
      */
     final protected function attachToRouter(RouterAwareInterface $routerAware): void
     {

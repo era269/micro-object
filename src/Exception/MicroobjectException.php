@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Exception;
 
-use Exception;
+use DomainException;
 
-class MicroobjectException extends Exception implements ExceptionInterface
+class MicroobjectException extends DomainException
 {
 
-    public function normalize(): array
-    {
-        // TODO: Implement normalized() method.
-    }
 }

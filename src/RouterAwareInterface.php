@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Era269\Microobject;
 
 
-use Era269\Microobject\Exception\ExceptionInterface;
+use DomainException;
 
 interface RouterAwareInterface
 {
     /**
-     * @throws ExceptionInterface
+     * @throws DomainException
      */
     public function withRouter(RouterInterface $router): void;
 }

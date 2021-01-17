@@ -9,7 +9,7 @@ use Era269\Microobject\Exception\ExceptionInterface;
 use Era269\Microobject\Message\ReplyInterface;
 use Era269\Microobject\MicroobjectInterface;
 
-interface PageInterface extends MicroobjectInterface, NotebookIdAwareInterface
+interface PageInterface extends MicroobjectInterface
 {
     /**
      * @throws ExceptionInterface

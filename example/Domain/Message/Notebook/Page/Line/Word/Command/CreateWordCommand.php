@@ -32,7 +32,7 @@ final class CreateWordCommand extends AbstractWordMessage implements Denormaliza
             ];
     }
 
-    public static function denormalize(array $data): self
+    public static function denormalize(array $data): static
     {
         return new self(
             NotebookId::denormalize($data['notebookId']),

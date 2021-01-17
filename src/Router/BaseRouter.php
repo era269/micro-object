@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Era269\Microobject\Router;
 
 
-use Era269\Microobject\Exception\ExceptionInterface;
-use Era269\Microobject\Exception\MicroobjectException;
+use DomainException;
 use Era269\Microobject\IdentifierInterface;
 use Era269\Microobject\Message\MessageIdInterface;
 use Era269\Microobject\Message\Reply\NullReply;
@@ -14,6 +13,7 @@ use Era269\Microobject\Message\ReplyInterface;
 use Era269\Microobject\MessageInterface;
 use Era269\Microobject\MicroobjectInterface;
 use Era269\Microobject\RouterInterface;
+use LogicException;
 use SplObjectStorage;
 use WeakMap;
 
@@ -51,14 +51,39 @@ class BaseRouter implements RouterInterface
         }
     }
 
+    private function attachToProcessorRegistry(MicroobjectInterface $microobject): void
+    {
+        $this->processorRegistry[$microobject->getId()] = $microobject;
+    }
+
+    private function attachToProcessingMap(string $messageClassName, MicroobjectInterface $microobject): void
+    {
+        if (empty($this->processingMap[$messageClassName])) {
+            $this->processingMap[$messageClassName] = new WeakMap();
+        }
+        $this->processingMap[$messageClassName][] = $microobject;
+    }
+
     public function detach(MicroobjectInterface $microobject): void
     {
         $this->detachFromProcessorRegistry($microobject);
         $this->detachFromProcessingMap($microobject);
     }
 
+    private function detachFromProcessorRegistry(MicroobjectInterface $microobject): void
+    {
+        unset($this->processorRegistry[$microobject->getId()]);
+    }
+
+    private function detachFromProcessingMap(MicroobjectInterface $microobject): void
+    {
+        foreach ($microobject->getInterfaceDocumentation() as $messageClassName) {
+            unset($this->processingMap[$messageClassName][$microobject]);
+        }
+    }
+
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function send(MessageInterface $message): ReplyInterface
     {
@@ -72,27 +97,21 @@ class BaseRouter implements RouterInterface
             : $this->routeProcessingToAllObjects($message);
     }
 
-    /**
-     * @throws MicroobjectException
-     */
     private function assertProcessorExistsFor(MessageInterface $message): void
     {
         $messageClassName = get_class($message);
         if (empty($this->processingMap[$messageClassName])) {
-            throw new MicroobjectException(sprintf(
+            throw new LogicException(sprintf(
                 "No processors found for '%s'",
                 $messageClassName
             ));
         }
     }
 
-    /**
-     * @throws MicroobjectException
-     */
     private function assertWasNotProcessed(MessageInterface $message): void
     {
         if ($this->messageRegistry->offsetExists($message->getId())) {
-            throw new MicroobjectException(sprintf(
+            throw new LogicException(sprintf(
                 'Message "%s" was already processed',
                 get_class($message)
             ));
@@ -105,7 +124,7 @@ class BaseRouter implements RouterInterface
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws DomainException
      */
     private function routeProcessingToTargetObject(MessageInterface $message): ReplyInterface
     {
@@ -114,7 +133,7 @@ class BaseRouter implements RouterInterface
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws DomainException
      */
     private function routeProcessingToAllObjects(MessageInterface $message): ReplyInterface
     {
@@ -141,30 +160,5 @@ class BaseRouter implements RouterInterface
         foreach ($this->processorRegistry as $processor) {
             $router->attach($processor);
         }
-    }
-
-    private function attachToProcessingMap(string $messageClassName, MicroobjectInterface $microobject): void
-    {
-        if (empty($this->processingMap[$messageClassName])) {
-            $this->processingMap[$messageClassName] = new WeakMap();
-        }
-        $this->processingMap[$messageClassName][] = $microobject;
-    }
-
-    private function attachToProcessorRegistry(MicroobjectInterface $microobject): void
-    {
-        $this->processorRegistry[$microobject->getId()] = $microobject;
-    }
-
-    private function detachFromProcessingMap(MicroobjectInterface $microobject): void
-    {
-        foreach ($microobject->getInterfaceDocumentation() as $messageClassName) {
-            unset($this->processingMap[$messageClassName][$microobject]);
-        }
-    }
-
-    private function detachFromProcessorRegistry(MicroobjectInterface $microobject): void
-    {
-        unset($this->processorRegistry[$microobject->getId()]);
     }
 }

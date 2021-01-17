@@ -1,31 +1,20 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject;
 
-
-use Era269\Microobject\Exception\ExceptionInterface;
+use OutOfBoundsException;
 
 interface RepositoryInterface extends CollectionInterface
 {
     /**
-     * @throws ExceptionInterface
+     * @throws OutOfBoundsException
      */
     public function get(IdentifierInterface $id): MicroobjectInterface;
 
-    /**
-     * @throws ExceptionInterface
-     */
     public function attach(MicroobjectInterface $microobject): void;
 
-    /**
-     * @throws ExceptionInterface
-     */
     public function detach(MicroobjectInterface $microobject): void;
 
-    /**
-     * @throws ExceptionInterface
-     */
     public function contains(IdentifierInterface $id): bool;
 }
