@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Era269\Microobject\Traits;
+namespace Era269\Microobject\Tests\Traits;
 
-use Era269\Microobject\NormalizableInterface;
-use Era269\Microobject\Traits\AbstractNormalizableTrait;
+use Era269\Normalizable\NormalizableInterface;
+use Era269\Normalizable\Traits\AbstractNormalizableTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
