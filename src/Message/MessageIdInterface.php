@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject\Message;
+namespace Era269\Microobject\Message;
 
-use Era269\TrueObject\IdentifierInterface;
+use Era269\Microobject\IdentifierInterface;
 
 interface MessageIdInterface extends IdentifierInterface
 {
-
+    public static function generate(): static;
 }

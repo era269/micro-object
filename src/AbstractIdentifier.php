@@ -2,46 +2,59 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject;
+namespace Era269\Microobject;
 
-use RuntimeException;
+use Era269\Normalizable\AbstractNormalizableObject;
 
-abstract class AbstractIdentifier extends AbstractNormalizableModel implements IdentifierInterface
+abstract class AbstractIdentifier extends AbstractNormalizableObject implements IdentifierInterface
 {
-    private string $id;
+    private const FIELD_NAME_VALUE = 'value';
 
-    public function __construct()
-    {
-        $uuid = uuid_create();
-        if (is_null($uuid)) {
-            throw new RuntimeException('Cannot generate uuid');
-        }
-        $this->id = $uuid;
+    private function __construct(
+        private string $value
+    ) {
+
     }
 
-    public function equalsString(string $id)
-    : bool
+    /**
+     * @inheritDoc
+     */
+    public static function create(string $id): static
     {
-        return $this->toString() === $id;
+        return new static($id);
     }
 
-    public function equals(IdentifierInterface $other)
-    : bool
+    /**
+     * @inheritDoc
+     */
+    public static function denormalize(array $data): static
     {
-        return $other->equalsString($this->toString());
+        return new static($data[self::FIELD_NAME_VALUE]);
     }
 
-    protected function getNormalized()
-    : array
+    /**
+     * @inheritDoc
+     */
+    public function __toString(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function equals(IdentifierInterface $other): bool
+    {
+        return (string)$other === (string)$this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getNormalized(): array
     {
         return [
-            'id' => $this->id
+            self::FIELD_NAME_VALUE => $this->value
         ];
-    }
-
-    private function toString()
-    : string
-    {
-        return $this->id;
     }
 }

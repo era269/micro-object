@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject;
+namespace Era269\Microobject;
 
-interface IdentifierInterface extends NormalizableInterface
+use Era269\Normalizable\DenormalizableInterface;
+use Era269\Normalizable\NormalizableInterface;
+use Stringable;
+
+interface IdentifierInterface extends NormalizableInterface, DenormalizableInterface, Stringable
 {
-    public function equalsString(string $id): bool;
+    public static function create(string $id): static;
 
     public function equals(IdentifierInterface $other): bool;
 }

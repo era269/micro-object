@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Era269\TrueObject;
+namespace Era269\Microobject;
 
 use Countable;
 
