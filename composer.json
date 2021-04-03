@@ -3,12 +3,6 @@
     "description": "Object <=> Service => MicroService <=> Microobject",
     "type": "library",
     "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "https://github.com/era269/normalizable.git"
-        }
-    ],
     "require": {
         "php": "^8.0",
         "era269/normalizable": "^0.2",
