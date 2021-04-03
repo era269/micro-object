@@ -10,7 +10,7 @@ abstract class AbstractIdentifier extends AbstractNormalizableObject implements 
 {
     private const FIELD_NAME_VALUE = 'value';
 
-    private function __construct(
+    final private function __construct(
         private string $value
     ) {
 

@@ -16,6 +16,9 @@ trait CanApplyPrivateEventsTrait
      */
     private array $applyEventMap;
 
+    /**
+     * @return array<string, string>
+     */
     private function getApplyEventMap(): array
     {
         if (empty($this->applyEventMap)) {
@@ -37,7 +40,7 @@ trait CanApplyPrivateEventsTrait
         $this->applyEvent($methodName, $event);
     }
 
-    abstract protected function applyEvent(string $methodName, EventInterface $event);
+    abstract protected function applyEvent(string $methodName, EventInterface $event): void;
 
     private function isEventProcessingMethod(ReflectionMethod $method): bool
     {
