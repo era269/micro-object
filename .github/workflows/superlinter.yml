@@ -1,4 +1,4 @@
-name: Super-Linter
+name: Lint Code Base
 
 on:
   # Trigger the workflow on push or pull request,
