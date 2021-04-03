@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Era269\Example\Domain;
+namespace Era269\Microobject\Example\Domain;
 
-use Era269\Example\Domain\Message\Notebook\NotebookMessageInterface;
-use Era269\Example\Domain\Message\Notebook\Page\PageCollectionMessageInterface;
-use Era269\Example\Domain\Notebook\NotebookId;
-use Era269\Microobject\Exception\ExceptionInterface;
-use Era269\Microobject\Message\ReplyInterface;
+use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageCollectionMessageInterface;
+use Era269\Microobject\Example\Domain\Notebook\NotebookId;
+use Era269\Microobject\Exception\MicroobjectExceptionInterface;
+use Era269\Microobject\MessageInterface;
 use Era269\Microobject\MicroobjectInterface;
 
 interface NotebookInterface extends MicroobjectInterface
@@ -15,12 +14,7 @@ interface NotebookInterface extends MicroobjectInterface
     public function getId(): NotebookId;
 
     /**
-     * @throws ExceptionInterface
+     * @throws MicroobjectExceptionInterface
      */
-    public function processPageCollectionMessages(PageCollectionMessageInterface $message): ReplyInterface;
-
-    /**
-     * @throws ExceptionInterface
-     */
-    public function processOwnMessages(NotebookMessageInterface $message): ReplyInterface;
+    public function processPageCollectionMessages(PageCollectionMessageInterface $message): MessageInterface;
 }

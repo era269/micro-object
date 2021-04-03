@@ -4,50 +4,33 @@ declare(strict_types=1);
 
 namespace Era269\Microobject;
 
-use DateTimeInterface;
-use Era269\Microobject\Exception\ExceptionInterface;
-use Era269\Microobject\Message\Reply\NullReply;
-use Era269\Microobject\Message\ReplyInterface;
-use Era269\Microobject\Router\BaseRouter;
-use Era269\Microobject\Traits\CanDetectIsMethodCallerInstanceOf;
-use Era269\Microobject\Traits\CanShareMyInterfaceDocumentation;
-use Era269\Microobject\Traits\RouterAwareTrait;
+use Era269\Microobject\Message\EventInterface;
+use Era269\Microobject\Message\Response\PositiveEmptyResponse;
+use Era269\Microobject\Traits\CanApplyPrivateEventsTrait;
+use Era269\Microobject\Traits\CanPublishEventsTrait;
+use Era269\Microobject\Traits\CanGetMethodNameByMessageTrait;
+use Era269\Normalizable\AbstractNormalizableObject;
 
-abstract class AbstractMicroobject extends AbstractNormalizableModel implements MicroobjectInterface
+abstract class AbstractMicroobject extends AbstractNormalizableObject implements MicroobjectInterface
 {
-    use CanDetectIsMethodCallerInstanceOf;
-    use CanShareMyInterfaceDocumentation;
-    use RouterAwareTrait;
-
-    private DateTimeInterface $updatedAt;
+    use CanGetMethodNameByMessageTrait;
+    use CanApplyPrivateEventsTrait;
+    use CanPublishEventsTrait;
 
     /**
-     * @throws ExceptionInterface
+     * @inheritDoc
      */
-    public function __construct(MicroobjectInterface ...$subjects)
+    final public function process(MessageInterface $message): MessageInterface
     {
-        $this->withRouter(new BaseRouter($this, ...$subjects));
-    }
+        $methodName = $this->getMethodNameByProcessedMessage($message);
 
-    /**
-     * @throws ExceptionInterface
-     */
-    final protected function processAndSend(MessageInterface $message): void
-    {
-        $this->process($message);
-        $this->send($message);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    final public function process(MessageInterface $message): ReplyInterface
-    {
-        if (!$this->isMethodCallerInstanceOfAny(RouterInterface::class, MicroobjectInterface::class)) {
-            return $this->send($message);
-        }
-        $methodName = $this->getInterfaceDocumentation()[get_class($message)];
         return $this->$methodName($message)
-            ?? new NullReply($message);
+            ?? new PositiveEmptyResponse();
+    }
+
+    final protected function applyAndPublish(EventInterface $event): void
+    {
+        $this->apply($event);
+        $this->publish($event);
     }
 }

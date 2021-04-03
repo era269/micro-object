@@ -4,25 +4,30 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Message;
 
-use Era269\Example\Domain\Message\MessageId;
-use Era269\Microobject\AbstractNormalizableModel;
-use Era269\Microobject\IdentifierInterface;
+use Era269\Microobject\Example\Domain\Message\MessageId;
 use Era269\Microobject\Message\Traits\CreatedAtAwareTrait;
 use Era269\Microobject\MessageInterface;
+use Era269\Microobject\Normalizable\NullNormalizable;
+use Era269\Normalizable\AbstractNormalizableObject;
+use Era269\Normalizable\NormalizableInterface;
 
-abstract class AbstractMessage extends AbstractNormalizableModel implements MessageInterface
+abstract class AbstractMessage extends AbstractNormalizableObject implements MessageInterface
 {
     use CreatedAtAwareTrait;
 
-    private IdentifierInterface $sourceObjectId;
-    private ?IdentifierInterface $targetObjectId = null;
-    private ?IdentifierInterface $replyOnMessageId = null;
-
     private MessageIdInterface $id;
+    private NormalizableInterface $payload;
 
     public function __construct()
     {
-        $this->id = MessageId::create();
+        $this->id = MessageId::generate();
+        $this->payload = new NullNormalizable();
+        $this->setCreatedAt();
+    }
+
+    public function getPayload(): NormalizableInterface
+    {
+        return $this->payload;
     }
 
     /**
@@ -32,45 +37,13 @@ abstract class AbstractMessage extends AbstractNormalizableModel implements Mess
     {
         return [
             'id' => $this->getId()->normalize(),
-            'createdAt' => $this->getCreatedAt()->format(DATE_RFC3339),
-            'replyToObjectId' => $this->getSourceObjectId() ? $this->getSourceObjectId()->normalize() : [],
-            'replyOnMessageId' => $this->getReplyOnMessageId() ? $this->getReplyOnMessageId()->normalize() : [],
-            'targetObjectId' => $this->getTargetObjectId() ? $this->getTargetObjectId()->normalize() : [],
+            'createdAt' => $this->createdAt->normalize(),
+            'payload' => $this->getPayload()->normalize(),
         ];
     }
 
     public function getId(): MessageIdInterface
     {
         return $this->id;
-    }
-
-    public function getSourceObjectId(): IdentifierInterface
-    {
-        return $this->sourceObjectId;
-    }
-
-    protected function setSourceObjectId(IdentifierInterface $id): void
-    {
-        $this->sourceObjectId = $id;
-    }
-
-    public function getReplyOnMessageId(): ?IdentifierInterface
-    {
-        return $this->replyOnMessageId;
-    }
-
-    protected function setReplyOnMessageId(?IdentifierInterface $replyOnMessageId): void
-    {
-        $this->replyOnMessageId = $replyOnMessageId;
-    }
-
-    public function getTargetObjectId(): ?IdentifierInterface
-    {
-        return $this->targetObjectId;
-    }
-
-    protected function setTargetObjectId(?IdentifierInterface $targetObjectId): void
-    {
-        $this->targetObjectId = $targetObjectId;
     }
 }

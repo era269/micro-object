@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Normalizable;
 
-use Era269\Microobject\AbstractNormalizableModel;
-use Era269\Microobject\NormalizableInterface;
+use Era269\Normalizable\AbstractNormalizableObject;
 
-class NullNormalizable extends AbstractNormalizableModel implements NormalizableInterface
+class NullNormalizable extends AbstractNormalizableObject
 {
-
     /**
      * @inheritDoc
      */

@@ -2,19 +2,16 @@
 declare(strict_types=1);
 
 
-namespace Era269\Example\Domain\Notebook;
+namespace Era269\Microobject\Example\Domain\Notebook;
 
 
-use Era269\Example\Domain\NotebookInterface;
+use Era269\Microobject\Example\Domain\NotebookInterface;
 use Era269\Microobject\IdentifierInterface;
-use Era269\Microobject\RepositoryInterface;
 
-interface NotebookRepositoryInterface extends RepositoryInterface
+interface NotebookRepositoryInterface
 {
     /**
      * @inheritDoc
      */
     public function get(IdentifierInterface $id): NotebookInterface;
-
-    public function attachNotebook(NotebookInterface $notebook): void;
 }

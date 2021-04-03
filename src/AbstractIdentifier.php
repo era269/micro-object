@@ -4,46 +4,57 @@ declare(strict_types=1);
 
 namespace Era269\Microobject;
 
-abstract class AbstractIdentifier extends AbstractNormalizableModel implements IdentifierInterface
+use Era269\Normalizable\AbstractNormalizableObject;
+
+abstract class AbstractIdentifier extends AbstractNormalizableObject implements IdentifierInterface
 {
-    private string $id;
+    private const FIELD_NAME_VALUE = 'value';
 
-    private function __construct(string $id = null)
-    {
-        $this->id = $id ?? $this->generateId();
+    private function __construct(
+        private string $value
+    ) {
+
     }
 
-    public static function create(): static
-    {
-        return new static();
-    }
-
-    public static function denormalize(string $id): static
+    /**
+     * @inheritDoc
+     */
+    public static function create(string $id): static
     {
         return new static($id);
     }
 
-    abstract protected function generateId(): string;
-
-    public function equalsString(string $id): bool
+    /**
+     * @inheritDoc
+     */
+    public static function denormalize(array $data): static
     {
-        return $this->toString() === $id;
+        return new static($data[self::FIELD_NAME_VALUE]);
     }
 
-    private function toString(): string
+    /**
+     * @inheritDoc
+     */
+    public function __toString(): string
     {
-        return $this->id;
+        return $this->value;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function equals(IdentifierInterface $other): bool
     {
-        return $other->equalsString($this->toString());
+        return (string)$other === (string)$this;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
         return [
-            'id' => $this->id
+            self::FIELD_NAME_VALUE => $this->value
         ];
     }
 }

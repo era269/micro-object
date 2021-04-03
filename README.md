@@ -1,6 +1,9 @@
 # micro-object
 OOP
 
-* the models are extremely independent:
-    * every model could be replaced with microservice
-    * every model could be stored with using different DB type
+The library just gives functionality of Message Prcessing and Event Dispatching.
+Only one case is described in the Example. See:
+* NotebooksPort.php
+* NotebookPortTest.php
+
+//ToDo: add more details

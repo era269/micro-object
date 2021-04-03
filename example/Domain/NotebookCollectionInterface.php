@@ -2,37 +2,30 @@
 declare(strict_types=1);
 
 
-namespace Era269\Example\Domain;
+namespace Era269\Microobject\Example\Domain;
 
 
-use Era269\Example\Domain\Message\Notebook\Command\AttachNotebookCollectionCommand;
-use Era269\Example\Domain\Message\Notebook\Command\DetachNotebookCollectionCommand;
-use Era269\Example\Domain\Message\Notebook\NotebookMessageInterface;
-use Era269\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
-use Era269\Microobject\Exception\ExceptionInterface;
-use Era269\Microobject\IdentifierCollectionAwareInterface;
-use Era269\Microobject\Message\ReplyInterface;
+use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCommand;
+use Era269\Microobject\Example\Domain\Message\Notebook\NotebookMessageInterface;
+use Era269\Microobject\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
+use Era269\Microobject\Exception\MicroobjectExceptionInterface;
+use Era269\Microobject\MessageInterface;
 use Era269\Microobject\MicroobjectCollectionInterface;
 
-interface NotebookCollectionInterface extends MicroobjectCollectionInterface, IdentifierCollectionAwareInterface
+interface NotebookCollectionInterface extends MicroobjectCollectionInterface
 {
     /**
-     * @throws ExceptionInterface
+     * @throws MicroobjectExceptionInterface
      */
-    public function getNotebook(GetNotebookQuery $query): ReplyInterface;
+    public function getNotebook(GetNotebookQuery $query): MessageInterface;
 
     /**
-     * @throws ExceptionInterface
+     * @throws MicroobjectExceptionInterface
      */
-    public function attachNotebook(AttachNotebookCollectionCommand $command): ReplyInterface;
+    public function attachNotebook(CreateNotebookCommand $command): MessageInterface;
 
     /**
-     * @throws ExceptionInterface
+     * @throws MicroobjectExceptionInterface
      */
-    public function detachNotebook(DetachNotebookCollectionCommand $command): ReplyInterface;
-
-    /**
-     * @throws ExceptionInterface
-     */
-    public function processNotebookMessage(NotebookMessageInterface $message): ReplyInterface;
+    public function processNotebookMessage(NotebookMessageInterface $message): MessageInterface;
 }

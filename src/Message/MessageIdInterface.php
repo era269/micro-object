@@ -8,5 +8,5 @@ use Era269\Microobject\IdentifierInterface;
 
 interface MessageIdInterface extends IdentifierInterface
 {
-
+    public static function generate(): static;
 }

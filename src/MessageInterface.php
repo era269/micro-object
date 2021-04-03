@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Era269\Microobject;
 
 use Era269\Microobject\Message\MessageIdInterface;
+use Era269\Normalizable\NormalizableInterface;
 
-interface MessageInterface extends CreatedAtAwareInterface, NormalizableInterface
+interface MessageInterface extends CreatedAtAwareInterface, NormalizableInterface, IdentifiableInterface
 {
     public function getId(): MessageIdInterface;
-
-    public function getTargetObjectId(): ?IdentifierInterface;
-
-    public function getSourceObjectId(): IdentifierInterface;
-
-    public function getReplyOnMessageId(): ?IdentifierInterface;
+    public function getPayload(): NormalizableInterface;
 }

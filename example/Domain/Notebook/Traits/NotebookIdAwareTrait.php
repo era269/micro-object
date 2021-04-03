@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Era269\Example\Domain\Notebook\Traits;
+namespace Era269\Microobject\Example\Domain\Notebook\Traits;
 
-use Era269\Example\Domain\Notebook\NotebookId;
+use Era269\Microobject\Example\Domain\Notebook\NotebookId;
 
 trait NotebookIdAwareTrait
 {

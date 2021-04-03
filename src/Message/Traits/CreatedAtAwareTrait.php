@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Message\Traits;
 
-use DateTimeImmutable;
 use DateTimeInterface;
+use Era269\Normalizable\Normalizable\DateTimeRfc3339Normalizable;
 
 trait CreatedAtAwareTrait
 {
-    private DateTimeInterface $createdAt;
+    private DateTimeRfc3339Normalizable $createdAt;
 
     public function getCreatedAt(): DateTimeInterface
     {
@@ -18,6 +18,6 @@ trait CreatedAtAwareTrait
 
     public function setCreatedAt(): void
     {
-        $this->createdAt = new DateTimeImmutable();
+        $this->createdAt = new DateTimeRfc3339Normalizable();
     }
 }

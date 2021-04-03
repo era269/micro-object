@@ -2,50 +2,72 @@
 declare(strict_types=1);
 
 
-namespace Era269\Example\Domain;
+namespace Era269\Microobject\Example\Domain;
 
 
-use Era269\Example\Domain\Message\Notebook\NotebookMessageInterface;
-use Era269\Example\Domain\Message\Notebook\Page\PageCollectionMessageInterface;
-use Era269\Example\Domain\Notebook\NotebookId;
-use Era269\Example\Domain\Notebook\PageCollectionInterface;
 use Era269\Microobject\AbstractMicroobject;
-use Era269\Microobject\Message\ReplyInterface;
+use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCommand;
+use Era269\Microobject\Example\Domain\Message\Notebook\Event\NotebookCreatedEvent;
+use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageCollectionMessageInterface;
+use Era269\Microobject\Example\Domain\Notebook\NotebookId;
+use Era269\Microobject\Example\Domain\Notebook\PageCollectionInterface;
+use Era269\Microobject\Message\Event\EventStreamInterface;
+use Era269\Microobject\MessageInterface;
+use Era269\Microobject\Traits\ApplyEventTrait;
+use Psr\EventDispatcher\EventDispatcherInterface;
+
 
 final class Notebook extends AbstractMicroobject implements NotebookInterface
 {
+    use ApplyEventTrait;
+
     private string $name;
     private PageCollectionInterface $pages;
     private NotebookId $id;
 
-    public function __construct(NotebookId $id, string $name, PageCollectionInterface $pages)
+    private function __construct(EventDispatcherInterface $eventDispatcher, PageCollectionInterface $pages)
     {
-        parent::__construct($pages);
-        $this->id = $id;
-        $this->name = $name;
+        parent::__construct($eventDispatcher);
         $this->pages = $pages;
     }
 
-    public function getId(): NotebookId
+    public static function create(
+        EventDispatcherInterface $eventDispatcher,
+        PageCollectionInterface $pages,
+        CreateNotebookCommand $command
+    ): self
     {
-        return $this->id;
+        $self = new self($eventDispatcher, $pages);
+        $self->applyAndPublish(
+            new NotebookCreatedEvent($command)
+        );
+        return $self;
+    }
+
+    public static function reconstitute(
+        EventDispatcherInterface $eventDispatcher,
+        PageCollectionInterface $pages,
+        EventStreamInterface $eventStream
+    ): self
+    {
+        $self = new self(
+            $eventDispatcher,
+            $pages
+        );
+        foreach ($eventStream as $event) {
+            $self->apply($event);
+        }
+
+        return $self;
     }
 
     /**
      * @inheritDoc
      */
-    public function processPageCollectionMessages(PageCollectionMessageInterface $message): ReplyInterface
+    public function processPageCollectionMessages(PageCollectionMessageInterface $message): MessageInterface
     {
         return $this->pages
             ->process($message);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function processOwnMessages(NotebookMessageInterface $message): ReplyInterface
-    {
-        return $this->process($message);
     }
 
     protected function getNormalized(): array
@@ -55,5 +77,16 @@ final class Notebook extends AbstractMicroobject implements NotebookInterface
             'name' => $this->name,
             'pages' => $this->pages->normalize(),
         ];
+    }
+
+    public function getId(): NotebookId
+    {
+        return $this->id;
+    }
+
+    private function applyNotebookCreatedEvent(NotebookCreatedEvent $event): void
+    {
+        $this->id = $event->getNotebookId();
+        $this->name = $event->getNotebookName();
     }
 }

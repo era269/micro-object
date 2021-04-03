@@ -1,35 +1,29 @@
 <?php
 declare(strict_types=1);
 
-namespace Era269\Example\Domain\Notebook;
+namespace Era269\Microobject\Example\Domain\Notebook;
 
-use Era269\Example\Domain\Message\Notebook\Page\Command\AttachPageCollectionCommand;
-use Era269\Example\Domain\Message\Notebook\Page\Command\DetachPageCollectionCommand;
-use Era269\Example\Domain\Message\Notebook\Page\PageMessageInterface;
-use Era269\Example\Domain\Message\Notebook\Page\Query\GetPageQuery;
-use Era269\Microobject\Exception\ExceptionInterface;
-use Era269\Microobject\Message\ReplyInterface;
+use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\CreatePageCommand;
+use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageMessageInterface;
+use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetPageQuery;
+use Era269\Microobject\Exception\MicroobjectExceptionInterface;
+use Era269\Microobject\MessageInterface;
 use Era269\Microobject\MicroobjectCollectionInterface;
 
 interface PageCollectionInterface extends MicroobjectCollectionInterface
 {
     /**
-     * @throws ExceptionInterface
+     * @throws MicroobjectExceptionInterface
      */
-    public function getPage(GetPageQuery $query): ReplyInterface;
+    public function getPage(GetPageQuery $query): MessageInterface;
 
     /**
-     * @throws ExceptionInterface
+     * @throws MicroobjectExceptionInterface
      */
-    public function attachPage(AttachPageCollectionCommand $command): ReplyInterface;
+    public function attachPage(CreatePageCommand $command): MessageInterface;
 
     /**
-     * @throws ExceptionInterface
+     * @throws MicroobjectExceptionInterface
      */
-    public function detachPage(DetachPageCollectionCommand $command): ReplyInterface;
-
-    /**
-     * @throws ExceptionInterface
-     */
-    public function processPageMessages(PageMessageInterface $message): ReplyInterface;
+    public function processPageMessages(PageMessageInterface $message): MessageInterface;
 }

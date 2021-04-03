@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Era269\Microobject;
 
+use Era269\Normalizable\NormalizableInterface;
+
 interface MicroobjectInterface extends
-    RouterAwareInterface,
     NormalizableInterface,
-    SelfDocumentedInterface,
-    MessageProcessorInterface
+    MessageProcessorInterface,
+    IdentifiableInterface
 {
-    public function getId(): IdentifierInterface;
+
 }
