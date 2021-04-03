@@ -1,0 +1,60 @@
+name: Super-Linter
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  # Also trigger on page_build, as well as release created events
+  page_build:
+  release:
+    types: # This configuration does not affect the page_build event above
+      - created
+
+jobs:
+  # Set the job key. The key is displayed as the job name
+  # when a job name is not provided
+  install-and-test:
+    # Name the Job
+    name: Install and run tests
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install
+        run: composer install
+
+      - name: Unit Tests
+        run: vendor/phpunit/phpunit/phpunit
+
+      # Runs the Super-Linter action
+      - name: Run Super-Linter
+        uses: github/super-linter@v3
+        env:
+          ACTIONS_RUNNER_DEBUG: false
+          VALIDATE_ALL_CODEBASE: true
+          FILTER_REGEX_INCLUDE: .*src/.*
+          #          FILTER_REGEX_EXCLUDE: .*(tests|vendor)/.*
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_PERL: false
+          VALIDATE_PYTHON: false
+          VALIDATE_RUBY: false
+          VALIDATE_COFFEE: false
+          VALIDATE_ANSIBLE: false
+          VALIDATE_JAVASCRIPT_ES: false
+          VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_TYPESCRIPT_ES: false
+          VALIDATE_TYPESCRIPT_STANDARD: false
+          VALIDATE_DOCKER: false
+          VALIDATE_GO: false
+          VALIDATE_TERRAFORM: false
+          VALIDATE_CSS: false
