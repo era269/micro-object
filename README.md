@@ -1,7 +1,6 @@
 # micro-object
 
 ![PHP Stan Badge](https://img.shields.io/badge/PHPStan-level%206-brightgreen.svg?style=flat">)
-![Code Coverage Badge](./badge.svg)
 ## OOP
 
 

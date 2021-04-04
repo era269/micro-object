@@ -39,9 +39,3 @@ jobs:
 
       - name: Unit Tests
         run: vendor/phpunit/phpunit/phpunit
-
-      - name: Update code coverage badge
-        uses: timkrase/phpunit-coverage-badge@v1.2.0
-        with:
-          push_badge: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
