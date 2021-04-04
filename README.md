@@ -1,7 +1,8 @@
 # micro-object
-OOP
 
-[![GitHub Super-Linter](https://github.com/era269/micro-object/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
+![PHP Stan Badge](https://img.shields.io/badge/PHPStan-level%206-brightgreen.svg?style=flat">)
+![Code Coverage Badge](./badge.svg)
+## OOP
 
 
 The library just gives functionality of Message Prcessing and Event Dispatching.
