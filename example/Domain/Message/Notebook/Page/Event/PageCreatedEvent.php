@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Page\Event;
 
 
+use DateTimeInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\AbstractPageMessage;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\CreatePageCommand;
 use Era269\Microobject\Example\Domain\Notebook\Page\Text;
@@ -31,6 +32,11 @@ final class PageCreatedEvent extends AbstractPageMessage implements EventInterfa
     public function getText(): Text
     {
         return $this->text;
+    }
+
+    public function getOccurredAt(): DateTimeInterface
+    {
+        return $this->getCreatedAt();
     }
 
     protected function getNormalized(): array
