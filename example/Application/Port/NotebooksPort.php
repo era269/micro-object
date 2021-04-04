@@ -22,6 +22,9 @@ final class NotebooksPort
 
     /**
      * POST /notebooks
+     *
+     * @param array<string, mixed> $request
+     * @return array<string, mixed>
      */
     public function addNotebook(array $request): array
     {
@@ -35,6 +38,9 @@ final class NotebooksPort
 
     /**
      * POST /notebooks/{notebookId}/pages
+     *
+     * @param array<string, mixed> $request
+     * @return array<string, mixed>
      */
     public function addPage(array $request): array
     {
@@ -48,6 +54,9 @@ final class NotebooksPort
 
     /**
      * POST /notebooks/{notebookId}/pages/{pageId}/text/add-line
+     *
+     * @param array<string, mixed> $request
+     * @return array<string, mixed>
      */
     public function addLine(array $request): array
     {
@@ -61,6 +70,9 @@ final class NotebooksPort
 
     /**
      * GET /notebooks/{notebookId}/pages/{pageId}/text
+     *
+     * @param array<string, mixed> $request
+     * @return array<string, mixed>
      */
     public function getText(array $request): array
     {
@@ -74,6 +86,9 @@ final class NotebooksPort
 
     /**
      * GET /notebooks/{notebookId}/pages/{pageId}
+     *
+     * @param array<string, mixed> $request
+     * @return array<string, mixed>
      */
     public function getPage(array $request): array
     {
@@ -87,6 +102,9 @@ final class NotebooksPort
 
     /**
      * GET /notebooks/{notebookId}
+     *
+     * @param array<string, mixed> $request
+     * @return array<string, mixed>
      */
     public function getNotebook(array $request): array
     {

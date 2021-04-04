@@ -9,7 +9,7 @@ use Era269\Microobject\Message\EventInterface;
 
 trait ApplyEventTrait
 {
-    final protected function applyEvent(string $methodName, EventInterface $event)
+    final protected function applyEvent(string $methodName, EventInterface $event): void
     {
         $this->$methodName($event);
     }

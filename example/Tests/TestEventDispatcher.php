@@ -25,7 +25,7 @@ final class TestEventDispatcher implements EventDispatcherInterface
     /**
      * @inheritDoc
      */
-    public function dispatch(object $event): void
+    public function dispatch(object $event): object
     {
         if (!$event instanceof EventInterface) {
             throw new LogicException(sprintf(
@@ -38,6 +38,8 @@ final class TestEventDispatcher implements EventDispatcherInterface
         foreach ($this->listeners as $listener) {
             $listener->process($event);
         }
+
+        return $event;
     }
 
     /**

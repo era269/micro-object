@@ -11,8 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 final class AbstractNormalizableTraitTest extends TestCase
 {
-    /** @var NormalizableInterface&MockObject $normalizable */
-    private MockObject $normalizable;
+    private MockObject|NormalizableInterface $normalizable;
 
     protected function setUp()
     : void
@@ -25,8 +24,11 @@ final class AbstractNormalizableTraitTest extends TestCase
 
     /**
      * @dataProvider normalizedDataProvider
+     *
+     * @param array<string, string> $normalized
+     * @param array<string, string> $expected
      */
-    public function testNormalized(array $normalized, array $expected)
+    public function testNormalized(array $normalized, array $expected): void
     {
         $this->normalizable
             ->method('getNormalized')
@@ -35,6 +37,9 @@ final class AbstractNormalizableTraitTest extends TestCase
         self::assertEquals($this->normalizable->normalize(), $expected);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function normalizedDataProvider(): array
     {
         return [

@@ -9,6 +9,9 @@ use Era269\Microobject\IdentifierInterface;
 use Era269\Microobject\Message\EventInterface;
 use Iterator;
 
+/**
+ * @extends \Iterator<int,EventInterface>
+ */
 interface EventStreamInterface extends Iterator
 {
     public function getDomainModelId(): IdentifierInterface;
