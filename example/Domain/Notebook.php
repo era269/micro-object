@@ -13,14 +13,11 @@ use Era269\Microobject\Example\Domain\Notebook\NotebookId;
 use Era269\Microobject\Example\Domain\Notebook\PageCollectionInterface;
 use Era269\Microobject\Message\Event\EventStreamInterface;
 use Era269\Microobject\MessageInterface;
-use Era269\Microobject\Traits\ApplyEventTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 
 final class Notebook extends AbstractMicroobject implements NotebookInterface
 {
-    use ApplyEventTrait;
-
     private string $name;
     private PageCollectionInterface $pages;
     private NotebookId $id;
@@ -84,7 +81,7 @@ final class Notebook extends AbstractMicroobject implements NotebookInterface
         return $this->id;
     }
 
-    private function applyNotebookCreatedEvent(NotebookCreatedEvent $event): void
+    protected function applyNotebookCreatedEvent(NotebookCreatedEvent $event): void
     {
         $this->id = $event->getNotebookId();
         $this->name = $event->getNotebookName();

@@ -16,13 +16,10 @@ use Era269\Microobject\IdentifierInterface;
 use Era269\Microobject\Message\Response\BaseResponse;
 use Era269\Microobject\Message\Response\PositiveEmptyResponse;
 use Era269\Microobject\MessageInterface;
-use Era269\Microobject\Traits\ApplyEventTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class PageCollection extends AbstractMicroobject implements PageCollectionInterface
 {
-    use ApplyEventTrait;
-
     private IdentifierInterface $id;
 
     public function __construct(

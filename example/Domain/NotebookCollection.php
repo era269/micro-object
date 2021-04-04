@@ -16,13 +16,10 @@ use Era269\Microobject\IdentifierInterface;
 use Era269\Microobject\Message\Response\BaseResponse;
 use Era269\Microobject\Message\Response\PositiveEmptyResponse;
 use Era269\Microobject\MessageInterface;
-use Era269\Microobject\Traits\ApplyEventTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class NotebookCollection extends AbstractMicroobject implements NotebookCollectionInterface
 {
-    use ApplyEventTrait;
-
     private IdentifierInterface $id;
 
     private function __construct(
