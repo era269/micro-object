@@ -25,18 +25,14 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Install php8
-        run: |
-          sudo apt-get update
-          sudo apt -y install software-properties-common
-          sudo add-apt-repository ppa:ondrej/php
-          sudo apt-get update
-          sudo apt -y install php8.0
-          sudo apt -y install php8.0-cli
-          php --version
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          coverage: xdebug
 
-      - name: Composer
-        run: composer install
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-progress
 
       - name: phpStan
         run: vendor/bin/phpstan analyse
