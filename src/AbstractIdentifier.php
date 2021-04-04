@@ -27,14 +27,6 @@ abstract class AbstractIdentifier extends AbstractNormalizableObject implements 
     /**
      * @inheritDoc
      */
-    public static function denormalize(array $data): static
-    {
-        return new static($data[self::FIELD_NAME_VALUE]);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function __toString(): string
     {
         return $this->value;
