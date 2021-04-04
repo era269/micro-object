@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Event;
 
 
+use DateTimeInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\AbstractNotebookMessage;
 use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCommand;
 use Era269\Microobject\IdentifierInterface;
@@ -28,6 +29,11 @@ final class NotebookCreatedEvent extends AbstractNotebookMessage implements Even
     public function getNotebookName(): string
     {
         return $this->notebookName;
+    }
+
+    public function getOccurredAt(): DateTimeInterface
+    {
+        return $this->getCreatedAt();
     }
 
     protected function getNormalized(): array

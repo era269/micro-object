@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Page\Event;
 
 
+use DateTimeInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\AbstractPageMessage;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\AddLineCommand;
 use Era269\Microobject\IdentifierInterface;
@@ -26,6 +27,11 @@ final class LineAddedEvent extends AbstractPageMessage implements EventInterface
     public function getDomainModelId(): IdentifierInterface
     {
         return $this->getPageId();
+    }
+
+    public function getOccurredAt(): DateTimeInterface
+    {
+        return $this->getCreatedAt();
     }
 
     protected function getNormalized(): array
