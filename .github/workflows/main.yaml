@@ -39,7 +39,7 @@ jobs:
         run: composer install
 
       - name: phpStan
-      - run: vendor/bin/phpstan analyse
+        run: vendor/bin/phpstan analyse
 
       - name: Unit Tests
         run: vendor/phpunit/phpunit/phpunit
