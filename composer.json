@@ -1,7 +1,9 @@
 {
     "name": "era269/micro-object",
-    "description": "Object <=> Service => MicroService <=> Microobject",
     "type": "library",
+    "description": "Object <=> Service => MicroService <=> Microobject",
+    "keywords": ["OOP","DDD","Event"],
+    "license": "MIT",
     "prefer-stable": true,
     "require": {
         "php": "^8.0",
@@ -15,7 +17,7 @@
     "authors": [
         {
             "name": "Yuriy Antonuyk",
-            "email": "yuriy.mihaylovich.antonyuk@gmail.com"
+            "email": "era269@ukr.net"
         },
         {
             "name": "Dmitriy Ivanov",
