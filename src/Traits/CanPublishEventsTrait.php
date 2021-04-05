@@ -14,7 +14,7 @@ trait CanPublishEventsTrait
     {
     }
 
-    private function publish(object $event): void
+    final protected function publish(object $event): void
     {
         $this->eventDispatcher->dispatch($event);
     }
