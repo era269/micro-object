@@ -37,7 +37,7 @@ trait CanApplyPrivateEventsTrait
     final protected function apply(EventInterface $event): void
     {
         $methodName = $this->getApplyEventMap()[$event::class];
-        $this->applyEvent($methodName, $event);
+        $this->$methodName($event);
     }
 
     private function isEventProcessingMethod(ReflectionMethod $method): bool
@@ -45,10 +45,5 @@ trait CanApplyPrivateEventsTrait
         return !empty($method->getParameters()) &&
             $method->getNumberOfParameters() === 1 &&
             is_subclass_of((string)$method->getParameters()[0]->getType(), EventInterface::class);
-    }
-
-    final protected function applyEvent(string $methodName, EventInterface $event): void
-    {
-        $this->$methodName($event);
     }
 }
