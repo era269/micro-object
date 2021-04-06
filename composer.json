@@ -33,13 +33,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Era269\\Microobject\\": "src",
-            "Era269\\Microobject\\Example\\": "example"
+            "Era269\\Microobject\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Era269\\Microobject\\Tests\\": "tests"
+            "Era269\\Microobject\\Tests\\": "tests",
+            "Era269\\Microobject\\Example\\": "example"
         }
     }
 }
