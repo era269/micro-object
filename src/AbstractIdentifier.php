@@ -16,9 +16,6 @@ abstract class AbstractIdentifier extends AbstractNormalizableObject implements 
 
     }
 
-    /**
-     * @inheritDoc
-     */
     public static function create(string $id): static
     {
         return new static($id);

@@ -16,7 +16,7 @@ trait CreatedAtAwareTrait
         return $this->createdAt;
     }
 
-    public function setCreatedAt(): void
+    final protected function setCreatedAt(): void
     {
         $this->createdAt = new DateTimeRfc3339Normalizable();
     }

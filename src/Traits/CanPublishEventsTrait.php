@@ -8,10 +8,11 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 trait CanPublishEventsTrait
 {
-    public function __construct(
-        private EventDispatcherInterface $eventDispatcher
-    )
+    private EventDispatcherInterface $eventDispatcher;
+
+    final protected function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
     {
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     final protected function publish(object $event): void

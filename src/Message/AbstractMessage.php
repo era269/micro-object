@@ -20,14 +20,29 @@ abstract class AbstractMessage extends AbstractNormalizableObject implements Mes
 
     public function __construct()
     {
-        $this->id = MessageId::generate();
-        $this->payload = new NullNormalizable();
+        $this->setId(MessageId::generate());
         $this->setCreatedAt();
+        $this->setPayload(new NullNormalizable());
+    }
+
+    final protected function setId(MessageIdInterface|MessageId $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): MessageIdInterface
+    {
+        return $this->id;
     }
 
     public function getPayload(): NormalizableInterface
     {
         return $this->payload;
+    }
+
+    final protected function setPayload(NormalizableInterface $payload): void
+    {
+        $this->payload = $payload;
     }
 
     /**
@@ -40,10 +55,5 @@ abstract class AbstractMessage extends AbstractNormalizableObject implements Mes
             'createdAt' => $this->createdAt->normalize(),
             'payload' => $this->getPayload()->normalize(),
         ];
-    }
-
-    public function getId(): MessageIdInterface
-    {
-        return $this->id;
     }
 }
