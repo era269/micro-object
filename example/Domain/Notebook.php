@@ -72,7 +72,6 @@ final class Notebook extends AbstractMicroobject implements NotebookInterface
         return [
             'id' => $this->getId()->normalize(),
             'name' => $this->name,
-            'pages' => $this->pages->normalize(),
         ];
     }
 

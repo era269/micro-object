@@ -147,14 +147,12 @@ class NotebookPortTest extends TestCase
         $notebookFactory = new Notebook\NotebookFactory(
             $this->eventDispatcher,
             new PageCollection(
-                $this->eventDispatcher,
                 new PageRepository($eventStorage, $pageFactory),
                 $pageFactory
             )
         );
         return new NotebooksPort(
             new NotebookCollectionFactory(
-                $this->eventDispatcher,
                 new NotebookRepository($eventStorage, $notebookFactory),
                 $notebookFactory
             )

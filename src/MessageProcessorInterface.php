@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject;
 
-
-use RuntimeException;
+use Era269\Microobject\Exception\MicroobjectExceptionInterface;
+use Era269\Microobject\Exception\MicroobjectRuntimeException;
 
 interface MessageProcessorInterface
 {
     /**
-     * @throws RuntimeException
+     * @throws MicroobjectExceptionInterface
+     * @throws MicroobjectRuntimeException
      */
     public function process(MessageInterface $message): MessageInterface;
 }

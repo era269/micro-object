@@ -1,11 +1,9 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject\Traits;
 
-
-use DomainException;
+use Era269\Microobject\Exception\MicroobjectLogicException;
 use Era269\Microobject\MessageInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -29,7 +27,7 @@ trait CanGetMethodNameByMessageTrait
         }
         return $this->getOwnMessageProcessMethod($message)
             ?? $this->getMessageInterfaceProcessMethod($message)
-            ?? throw new DomainException(sprintf(
+            ?? throw new MicroobjectLogicException(sprintf(
                 'Incorrect internal method call: current object doesn\'t know how to process the message "%s"',
                 $message::class
             ));
@@ -40,7 +38,10 @@ trait CanGetMethodNameByMessageTrait
         $selfReflection = new ReflectionObject($this);
         foreach ($selfReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if ($this->isMessageProcessingMethod($method)) {
-                $this->attachToDocumentation($method);
+                $this->attachToDocumentation(
+                    $method->getName(),
+                    $this->getFirstParameterClassName($method)
+                );
             }
         }
     }
@@ -48,24 +49,22 @@ trait CanGetMethodNameByMessageTrait
     private function isMessageProcessingMethod(ReflectionMethod $method): bool
     {
         return
-            $this->isMethodHasParameterSubclassOf($method, MessageInterface::class) &&
+            $this->isMethodHasOnlyParameterSubclassOf($method, MessageInterface::class) &&
             $method->getName() !== 'process';
     }
 
-    private function isMethodHasParameterSubclassOf(ReflectionMethod $method, string $className): bool
+    private function isMethodHasOnlyParameterSubclassOf(ReflectionMethod $method, string $className): bool
     {
         return !empty($method->getParameters()) &&
             $method->getNumberOfParameters() === 1 &&
-            is_subclass_of((string)$method->getParameters()[0]->getType(), $className);
+            is_subclass_of($this->getFirstParameterClassName($method), $className);
     }
 
-    private function attachToDocumentation(ReflectionMethod $method): void
+    private function attachToDocumentation(string $methodName, string $messageClassName): void
     {
-        $messageClassName = (string) $method->getParameters()[0]->getType();
-        $parameterReflection = new ReflectionClass($messageClassName);
-        $parameterReflection->isInterface()
-            ? $this->proxyMessageInterfaces[$messageClassName] = $method->getName()
-            : $this->ownMessages[$messageClassName] = $method->getName();
+        (new ReflectionClass($messageClassName))->isInterface()
+            ? $this->proxyMessageInterfaces[$messageClassName] = $methodName
+            : $this->ownMessages[$messageClassName] = $methodName;
     }
 
     private function getOwnMessageProcessMethod(MessageInterface $message): ?string
@@ -82,5 +81,16 @@ trait CanGetMethodNameByMessageTrait
             }
         }
         return null;
+    }
+
+    private function getFirstParameterClassName(ReflectionMethod $method): string
+    {
+        return count($method->getParameters())
+            ? (string) $method->getParameters()[0]->getType()
+            : throw new MicroobjectLogicException(sprintf(
+                'Method "%s::%s" should have at least one parameter',
+                $method->getDeclaringClass(),
+                $method->getName()
+            ));
     }
 }
