@@ -28,7 +28,7 @@ abstract class AbstractMicroobject extends AbstractNormalizableObject implements
             ?? new PositiveEmptyResponse();
     }
 
-    final protected function applyAndPublish(EventInterface $event): void
+    protected function applyAndPublish(EventInterface $event): void
     {
         $this->apply($event);
         $this->publish($event);
