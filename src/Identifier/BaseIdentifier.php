@@ -2,23 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Era269\Microobject;
+namespace Era269\Microobject\Identifier;
 
+use Era269\Microobject\IdentifierInterface;
 use Era269\Normalizable\AbstractNormalizableObject;
 
-abstract class AbstractIdentifier extends AbstractNormalizableObject implements IdentifierInterface
+class BaseIdentifier extends AbstractNormalizableObject implements IdentifierInterface
 {
     private const FIELD_NAME_VALUE = 'value';
 
-    final private function __construct(
+    public function __construct(
         private string $value
     ) {
 
-    }
-
-    public static function create(string $id): static
-    {
-        return new static($id);
     }
 
     /**

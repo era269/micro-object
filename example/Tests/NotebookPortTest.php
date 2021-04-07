@@ -15,6 +15,9 @@ use Era269\Microobject\Example\Infrastructure\EventStorage;
 use Era269\Microobject\Example\Infrastructure\Listener\PersistenceListener;
 use Era269\Microobject\Example\Infrastructure\Repository\NotebookRepository;
 use Era269\Microobject\Example\Infrastructure\Repository\PageRepository;
+use Era269\Microobject\Exception\MicroobjectExceptionInterface;
+use Era269\Microobject\Exception\MicroobjectLogicException;
+use Era269\Microobject\Exception\MicroobjectOutOfBoundsException;
 use Era269\Microobject\Message\Event\EventStorageInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -24,15 +27,25 @@ class NotebookPortTest extends TestCase
     const UNIQUE_ID_PAGE     = '1';
     private TestEventDispatcher $eventDispatcher;
 
+    public function testGetUnExistingNotebook(): void
+    {
+        $this->expectException(MicroobjectOutOfBoundsException::class);
+
+        $this->getAutowiredNotebookPort(new EventStorage())
+            ->getNotebook([
+                'notebookId' => self::UNIQUE_ID_NOTEBOOK,
+            ]);
+    }
+
     public function testAddNotebook(): EventStorageInterface
     {
         $eventStorage = new EventStorage();
 
         $this->getAutowiredNotebookPort($eventStorage)
             ->addNotebook([
-            'notebookId' => self::UNIQUE_ID_NOTEBOOK,
-            'notebookName' => 'notebook-name',
-        ]);
+                'notebookId' => self::UNIQUE_ID_NOTEBOOK,
+                'notebookName' => 'notebook-name',
+            ]);
 
         $this->assertEventDispatched(NotebookCreatedEvent::class);
 
@@ -46,8 +59,8 @@ class NotebookPortTest extends TestCase
     {
         $normalizedNotebookResponse = $this->getAutowiredNotebookPort($eventStorage)
             ->getNotebook([
-            'notebookId' => self::UNIQUE_ID_NOTEBOOK,
-        ]);
+                'notebookId' => self::UNIQUE_ID_NOTEBOOK,
+            ]);
 
         self::assertEquals(self::UNIQUE_ID_NOTEBOOK, $normalizedNotebookResponse['payload']['id']['value']);
 
@@ -61,13 +74,13 @@ class NotebookPortTest extends TestCase
     {
         $this->getAutowiredNotebookPort($eventStorage)
             ->addPage([
-            'notebookId' => self::UNIQUE_ID_NOTEBOOK,
-            'pageId' => self::UNIQUE_ID_PAGE,
-            'text' => [
-                'first line',
-                'second line',
-            ],
-        ]);
+                'notebookId' => self::UNIQUE_ID_NOTEBOOK,
+                'pageId' => self::UNIQUE_ID_PAGE,
+                'text' => [
+                    'first line',
+                    'second line',
+                ],
+            ]);
 
         $this->assertEventDispatched(PageCreatedEvent::class);
 
@@ -81,9 +94,9 @@ class NotebookPortTest extends TestCase
     {
         $normalizedPageResponse = $this->getAutowiredNotebookPort($eventStorage)
             ->getPage([
-            'notebookId' => self::UNIQUE_ID_NOTEBOOK,
-            'pageId' => self::UNIQUE_ID_PAGE,
-        ]);
+                'notebookId' => self::UNIQUE_ID_NOTEBOOK,
+                'pageId' => self::UNIQUE_ID_PAGE,
+            ]);
 
         self::assertEquals(self::UNIQUE_ID_PAGE, $normalizedPageResponse['payload']['id']['value']);
 
@@ -97,10 +110,10 @@ class NotebookPortTest extends TestCase
     {
         $this->getAutowiredNotebookPort($eventStorage)
             ->addLine([
-            'notebookId' => self::UNIQUE_ID_NOTEBOOK,
-            'pageId' => self::UNIQUE_ID_PAGE,
-            'line' => 'third line',
-        ]);
+                'notebookId' => self::UNIQUE_ID_NOTEBOOK,
+                'pageId' => self::UNIQUE_ID_PAGE,
+                'line' => 'third line',
+            ]);
 
         $this->assertEventDispatched(LineAddedEvent::class);
 
@@ -114,9 +127,9 @@ class NotebookPortTest extends TestCase
     {
         $normalizedTextResponse = $this->getAutowiredNotebookPort($eventStorage)
             ->getText([
-            'notebookId' => self::UNIQUE_ID_NOTEBOOK,
-            'pageId' => self::UNIQUE_ID_PAGE,
-        ]);
+                'notebookId' => self::UNIQUE_ID_NOTEBOOK,
+                'pageId' => self::UNIQUE_ID_PAGE,
+            ]);
 
         $expectedText = [
             'first line',
@@ -127,12 +140,30 @@ class NotebookPortTest extends TestCase
         self::assertEquals($expectedText, $normalizedTextResponse['payload']['lines']);
     }
 
-    private function assertEventDispatched(string $eventClassName): void
+    /**
+     * @depends testAddNotebook
+     * @throws MicroobjectExceptionInterface
+     */
+    public function testWrongMessageProcessingCase(EventStorageInterface $eventStorage): void
     {
-        self::assertArrayHasKey($eventClassName, $this->eventDispatcher->getDispatchedEvents());
+        $this->expectException(MicroobjectLogicException::class);
+
+        $this->getAutowiredNotebookCollectionFactory($eventStorage)
+            ->create()
+            ->process(new TestFailPageEvent(
+                new Notebook\NotebookId(self::UNIQUE_ID_NOTEBOOK),
+                new Notebook\Page\PageId(self::UNIQUE_ID_PAGE),
+            ));
     }
 
     private function getAutowiredNotebookPort(EventStorageInterface $eventStorage): NotebooksPort
+    {
+        return new NotebooksPort(
+            $this->getAutowiredNotebookCollectionFactory($eventStorage)
+        );
+    }
+
+    private function getAutowiredNotebookCollectionFactory(EventStorageInterface $eventStorage): NotebookCollectionFactory
     {
         $this->eventDispatcher = new TestEventDispatcher(
             [
@@ -151,11 +182,14 @@ class NotebookPortTest extends TestCase
                 $pageFactory
             )
         );
-        return new NotebooksPort(
-            new NotebookCollectionFactory(
-                new NotebookRepository($eventStorage, $notebookFactory),
-                $notebookFactory
-            )
+        return new NotebookCollectionFactory(
+            new NotebookRepository($eventStorage, $notebookFactory),
+            $notebookFactory
         );
+    }
+
+    private function assertEventDispatched(string $eventClassName): void
+    {
+        self::assertArrayHasKey($eventClassName, $this->eventDispatcher->getDispatchedEvents());
     }
 }

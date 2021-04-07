@@ -14,6 +14,11 @@ trait MessageTrait
     private MessageIdInterface $id;
     private NormalizableInterface $payload;
 
+    public function getId(): MessageIdInterface
+    {
+        return $this->id;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -24,11 +29,6 @@ trait MessageTrait
             'createdAt' => $this->createdAt->normalize(),
             'payload' => $this->getPayload()->normalize(),
         ];
-    }
-
-    public function getId(): MessageIdInterface
-    {
-        return $this->id;
     }
 
     final protected function setId(MessageIdInterface $id): void

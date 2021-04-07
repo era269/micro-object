@@ -13,8 +13,8 @@ final class GetTextQuery extends AbstractPageMessage implements DenormalizableIn
     public static function denormalize(array $data): static
     {
         return new self(
-            NotebookId::create($data['notebookId']),
-            PageId::create($data['pageId']),
+            new NotebookId($data['notebookId']),
+            new PageId($data['pageId']),
         );
     }
 }

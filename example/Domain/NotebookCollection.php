@@ -12,7 +12,7 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
 use Era269\Microobject\Example\Domain\Notebook\NotebookFactoryInterface;
 use Era269\Microobject\Example\Domain\Notebook\NotebookRepositoryInterface;
 use Era269\Microobject\Message\Response\BaseResponse;
-use Era269\Microobject\Message\Response\PositiveEmptyResponse;
+use Era269\Microobject\Message\Response\NullResponse;
 use Era269\Microobject\MessageInterface;
 
 final class NotebookCollection extends AbstractMicroobjectCollection implements NotebookCollectionInterface
@@ -61,7 +61,7 @@ final class NotebookCollection extends AbstractMicroobjectCollection implements 
             $command
         );
 
-        return new PositiveEmptyResponse();
+        return new NullResponse();
     }
 
     public function processNotebookMessage(NotebookMessageInterface $message): MessageInterface
