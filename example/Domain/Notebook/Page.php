@@ -15,7 +15,7 @@ use Era269\Microobject\AbstractMicroobject;
 use Era269\Microobject\Example\Domain\Notebook\Page\Text;
 use Era269\Microobject\Message\Event\EventStreamInterface;
 use Era269\Microobject\Message\Response\BaseResponse;
-use Era269\Microobject\Message\Response\PositiveEmptyResponse;
+use Era269\Microobject\Message\Response\NullResponse;
 use Era269\Microobject\MessageInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -67,7 +67,7 @@ final class Page extends AbstractMicroobject implements PageInterface
         $this->applyAndPublish(
             new LineAddedEvent($command)
         );
-        return new PositiveEmptyResponse();
+        return new NullResponse();
     }
 
     public function getText(GetTextQuery $query): MessageInterface

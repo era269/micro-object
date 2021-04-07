@@ -25,7 +25,7 @@ final class CreateNotebookCommand extends AbstractNotebookCollectionMessage impl
     public static function denormalize(array $data): static
     {
         return new self(
-            NotebookId::create($data['notebookId']),
+            new NotebookId($data['notebookId']),
             $data['notebookName']
         );
     }

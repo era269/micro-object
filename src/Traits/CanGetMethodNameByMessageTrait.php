@@ -35,6 +35,9 @@ trait CanGetMethodNameByMessageTrait
 
     private function buildCache(): void
     {
+        $this->ownMessages = [];
+        $this->proxyMessageInterfaces = [];
+
         $selfReflection = new ReflectionObject($this);
         foreach ($selfReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if ($this->isMessageProcessingMethod($method)) {

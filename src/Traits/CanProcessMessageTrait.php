@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Era269\Microobject\Traits;
 
 use Era269\Microobject\Exception\MicroobjectRuntimeException;
-use Era269\Microobject\Message\Response\PositiveEmptyResponse;
+use Era269\Microobject\Message\Response\NullResponse;
 use Era269\Microobject\Message\ResponseInterface;
 use Era269\Microobject\MessageInterface;
 
@@ -21,6 +21,6 @@ trait CanProcessMessageTrait
         $methodName = $this->getMethodNameByProcessedMessage($message);
 
         return $this->$methodName($message)
-            ?? new PositiveEmptyResponse();
+            ?? new NullResponse();
     }
 }

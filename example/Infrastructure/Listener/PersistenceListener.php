@@ -8,7 +8,7 @@ namespace Era269\Microobject\Example\Infrastructure\Listener;
 use DomainException;
 use Era269\Microobject\Message\Event\EventStorageInterface;
 use Era269\Microobject\Message\EventInterface;
-use Era269\Microobject\Message\Response\PositiveEmptyResponse;
+use Era269\Microobject\Message\Response\NullResponse;
 use Era269\Microobject\MessageInterface;
 use Era269\Microobject\MessageProcessorInterface;
 use Era269\Microobject\Traits\CanGetMethodNameByMessageTrait;
@@ -36,6 +36,6 @@ final class PersistenceListener implements MessageProcessorInterface
             // do nothing
         }
 
-        return new PositiveEmptyResponse();
+        return new NullResponse();
     }
 }
