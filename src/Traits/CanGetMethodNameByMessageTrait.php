@@ -75,7 +75,7 @@ trait CanGetMethodNameByMessageTrait
                 $method->getDeclaringClass(),
                 $method->getName()
             ));
-        return class_exists($className)
+        return class_exists($className) || interface_exists($className)
             ? $className
             : throw new MicroobjectLogicException(sprintf(
                 'Parameter has to be an instance of "%s". "%s" given',

@@ -17,7 +17,7 @@ class EventStreamTest extends TestCase
      */
     private array $events;
 
-    public function test()
+    public function test(): void
     {
         foreach ($this->events as $event) {
             $this->eventStream->attach($event);
