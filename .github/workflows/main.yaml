@@ -37,5 +37,8 @@ jobs:
       - name: phpStan
         run: vendor/bin/phpstan analyse
 
-      - name: Unit Tests
-        run: vendor/phpunit/phpunit/phpunit --coverage-text
+      - name: phpUnit
+        run: vendor/bin/phpunit
+
+      - name: Codecov
+        uses: codecov/codecov-action@v1.3.2
