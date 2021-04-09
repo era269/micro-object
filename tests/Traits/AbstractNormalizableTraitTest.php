@@ -13,15 +13,6 @@ final class AbstractNormalizableTraitTest extends TestCase
 {
     private MockObject|NormalizableInterface $normalizable;
 
-    protected function setUp()
-    : void
-    {
-        parent::setUp();
-
-        $this->normalizable = $this->getMockForTrait(AbstractNormalizableTrait::class, [], 'AbstractNormalizableTraitMock');
-
-    }
-
     /**
      * @dataProvider normalizedDataProvider
      *
@@ -59,6 +50,17 @@ final class AbstractNormalizableTraitTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->normalizable = $this->getMockForTrait(
+            AbstractNormalizableTrait::class,
+            [],
+            'AbstractNormalizableTraitMock'
+        );
     }
 }
 

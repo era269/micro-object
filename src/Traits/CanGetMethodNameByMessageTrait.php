@@ -63,6 +63,30 @@ trait CanGetMethodNameByMessageTrait
             is_subclass_of($this->getFirstParameterClassName($method), $className);
     }
 
+    /**
+     * @return class-string
+     */
+    private function getFirstParameterClassName(ReflectionMethod $method): string
+    {
+        $className = count($method->getParameters())
+            ? (string)$method->getParameters()[0]->getType()
+            : throw new MicroobjectLogicException(sprintf(
+                'Method "%s::%s" should have at least one parameter',
+                $method->getDeclaringClass(),
+                $method->getName()
+            ));
+        return class_exists($className) || interface_exists($className)
+            ? $className
+            : throw new MicroobjectLogicException(sprintf(
+                'Parameter has to be an instance of "%s". "%s" given',
+                MessageInterface::class,
+                $className
+            ));
+    }
+
+    /**
+     * @param class-string $messageClassName
+     */
     private function attachToDocumentation(string $methodName, string $messageClassName): void
     {
         (new ReflectionClass($messageClassName))->isInterface()
@@ -84,16 +108,5 @@ trait CanGetMethodNameByMessageTrait
             }
         }
         return null;
-    }
-
-    private function getFirstParameterClassName(ReflectionMethod $method): string
-    {
-        return count($method->getParameters())
-            ? (string) $method->getParameters()[0]->getType()
-            : throw new MicroobjectLogicException(sprintf(
-                'Method "%s::%s" should have at least one parameter',
-                $method->getDeclaringClass(),
-                $method->getName()
-            ));
     }
 }
