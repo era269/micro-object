@@ -40,28 +40,8 @@ trait CanGetMethodNameByMessageTrait
 
         $selfReflection = new ReflectionObject($this);
         foreach ($selfReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            $messageTypeClassName = $this->getMessageTypeClassName($method);
-            if ($messageTypeClassName) {
-                $this->attachToDocumentation(
-                    $method->getName(),
-                    $messageTypeClassName
-                );
-            }
+            $this->tryAttachToDocumentation($method);
         }
-    }
-
-    /**
-     * @return class-string|false
-     */
-    private function getMessageTypeClassName(ReflectionMethod $method): string|false
-    {
-        return !empty($method->getParameters())
-        && $method->getNumberOfParameters() === 1
-        && is_subclass_of($className = (string)$method->getParameters()[0]->getType(), MessageInterface::class)
-        /** @var class-string $className */
-        && $method->getName() !== 'process'
-            ? $className
-            : false;
     }
 
     /**
@@ -88,5 +68,19 @@ trait CanGetMethodNameByMessageTrait
             }
         }
         return null;
+    }
+
+    private function tryAttachToDocumentation(ReflectionMethod $method): void
+    {
+        if ($method->getNumberOfParameters() !== 1) {
+            return;
+        }
+        $parameterType = (string)$method->getParameters()[0]->getType();
+        if (is_subclass_of($parameterType, MessageInterface::class)) {
+            $this->attachToDocumentation(
+                $method->getName(),
+                $parameterType
+            );
+        }
     }
 }
