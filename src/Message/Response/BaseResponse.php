@@ -11,13 +11,9 @@ use Era269\Normalizable\NormalizableInterface;
 class BaseResponse extends AbstractMessage implements ResponseInterface
 {
     public function __construct(
-        private NormalizableInterface $payload
+        NormalizableInterface $payload
     ) {
         parent::__construct();
-    }
-
-    public function getPayload(): NormalizableInterface
-    {
-        return $this->payload;
+        $this->setPayload($payload);
     }
 }

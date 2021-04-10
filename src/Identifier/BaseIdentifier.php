@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Era269\Microobject\Identifier;
 
 use Era269\Microobject\IdentifierInterface;
-use Era269\Normalizable\AbstractNormalizableObject;
+use Era269\Normalizable\Abstraction\AbstractNormalizable;
 
-class BaseIdentifier extends AbstractNormalizableObject implements IdentifierInterface
+class BaseIdentifier extends AbstractNormalizable implements IdentifierInterface
 {
     private const FIELD_NAME_VALUE = 'value';
 

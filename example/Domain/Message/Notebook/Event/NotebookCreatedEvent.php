@@ -36,10 +36,11 @@ final class NotebookCreatedEvent extends AbstractNotebookMessage implements Even
         return $this->getCreatedAt();
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'notebookName' => $this->notebookName,
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

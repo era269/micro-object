@@ -26,11 +26,12 @@ final class AddLineCommand extends AbstractPageMessage implements CommandInterfa
         return $this->line;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'line' => $this->line
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 
     public static function denormalize(array $data): static

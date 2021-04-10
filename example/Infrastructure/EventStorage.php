@@ -25,9 +25,8 @@ final class EventStorage implements EventStorageInterface
     public function getEvents(IdentifierInterface $id): EventStreamInterface
     {
         $idString = (string) $id;
-        return isset($this->storage[$idString])
-            ? $this->storage[$idString]
-            : throw new MicroobjectOutOfBoundsException($id, EventStreamInterface::class);
+        return $this->storage[$idString]
+            ?? throw new MicroobjectOutOfBoundsException($id, EventStreamInterface::class);
     }
 
     public function attachEvents(IdentifierInterface $id, EventInterface ...$events): void

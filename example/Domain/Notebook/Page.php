@@ -16,7 +16,7 @@ use Era269\Microobject\Example\Domain\Notebook\Page\Text;
 use Era269\Microobject\Message\Event\EventStreamInterface;
 use Era269\Microobject\Message\Response\BaseResponse;
 use Era269\Microobject\Message\Response\NullResponse;
-use Era269\Microobject\MessageInterface;
+use Era269\Microobject\Message\ResponseInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class Page extends AbstractMicroobject implements PageInterface
@@ -62,7 +62,7 @@ final class Page extends AbstractMicroobject implements PageInterface
         return $this->id;
     }
 
-    public function addLine(AddLineCommand $command): MessageInterface
+    public function addLine(AddLineCommand $command): ResponseInterface
     {
         $this->applyAndPublish(
             new LineAddedEvent($command)
@@ -70,7 +70,7 @@ final class Page extends AbstractMicroobject implements PageInterface
         return new NullResponse();
     }
 
-    public function getText(GetTextQuery $query): MessageInterface
+    public function getText(GetTextQuery $query): ResponseInterface
     {
         return new BaseResponse($this->text);
     }

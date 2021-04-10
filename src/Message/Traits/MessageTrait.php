@@ -20,7 +20,7 @@ trait MessageTrait
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<string, mixed>
      */
     protected function getNormalized(): array
     {

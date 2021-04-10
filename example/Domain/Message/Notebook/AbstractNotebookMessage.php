@@ -18,10 +18,11 @@ abstract class AbstractNotebookMessage extends AbstractNotebookCollectionMessage
         $this->setNotebookId($notebookId);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'notebookId' => $this->getNotebookId()->normalize(),
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

@@ -12,7 +12,7 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageCollectionMessag
 use Era269\Microobject\Example\Domain\Notebook\NotebookId;
 use Era269\Microobject\Example\Domain\Notebook\PageCollectionInterface;
 use Era269\Microobject\Message\Event\EventStreamInterface;
-use Era269\Microobject\MessageInterface;
+use Era269\Microobject\Message\ResponseInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 
@@ -61,7 +61,7 @@ final class Notebook extends AbstractMicroobject implements NotebookInterface
     /**
      * @inheritDoc
      */
-    public function processPageCollectionMessages(PageCollectionMessageInterface $message): MessageInterface
+    public function processPageCollectionMessages(PageCollectionMessageInterface $message): ResponseInterface
     {
         return $this->pages
             ->process($message);

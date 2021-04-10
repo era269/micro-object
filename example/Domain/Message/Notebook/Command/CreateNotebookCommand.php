@@ -35,11 +35,11 @@ final class CreateNotebookCommand extends AbstractNotebookCollectionMessage impl
         return $this->notebookName;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'notebookId' => $this->getNotebookId()->normalize(),
-                'notebookName' => $this->notebookName,
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }
