@@ -40,38 +40,27 @@ trait CanGetMethodNameByMessageTrait
 
         $selfReflection = new ReflectionObject($this);
         foreach ($selfReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($this->isMessageProcessingMethod($method)) {
+            $messageTypeClassName = $this->getMessageTypeClassName($method);
+            if ($messageTypeClassName) {
                 $this->attachToDocumentation(
                     $method->getName(),
-                    $this->getFirstParameterClassName($method)
+                    $messageTypeClassName
                 );
             }
         }
     }
 
-    private function isMessageProcessingMethod(ReflectionMethod $method): bool
-    {
-        return
-            $this->isMethodHasOnlyParameterSubclassOf($method, MessageInterface::class) &&
-            $method->getName() !== 'process';
-    }
-
-    private function isMethodHasOnlyParameterSubclassOf(ReflectionMethod $method, string $className): bool
-    {
-        return !empty($method->getParameters()) &&
-            $method->getNumberOfParameters() === 1 &&
-            is_subclass_of($this->getFirstParameterClassName($method), $className);
-    }
-
     /**
-     * @return class-string
+     * @return class-string|false
      */
-    private function getFirstParameterClassName(ReflectionMethod $method): string
+    private function getMessageTypeClassName(ReflectionMethod $method): string|false
     {
-        $className = (string) $method->getParameters()[0]->getType();
-        return class_exists($className) || interface_exists($className)
-            ? $className
-            : '';
+        return !empty($method->getParameters())
+        && $method->getNumberOfParameters() === 1
+        && is_subclass_of($className = $method->getParameters()[0]->getType(), MessageInterface::class)
+        && $method->getName() !== 'process'
+            ? (string)$className
+            : false;
     }
 
     /**
