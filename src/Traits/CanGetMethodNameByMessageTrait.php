@@ -57,9 +57,10 @@ trait CanGetMethodNameByMessageTrait
     {
         return !empty($method->getParameters())
         && $method->getNumberOfParameters() === 1
-        && is_subclass_of($className = $method->getParameters()[0]->getType(), MessageInterface::class)
+        && is_subclass_of($className = (string)$method->getParameters()[0]->getType(), MessageInterface::class)
+        /** @var class-string $className */
         && $method->getName() !== 'process'
-            ? (string)$className
+            ? $className
             : false;
     }
 
