@@ -68,20 +68,10 @@ trait CanGetMethodNameByMessageTrait
      */
     private function getFirstParameterClassName(ReflectionMethod $method): string
     {
-        $className = count($method->getParameters())
-            ? (string)$method->getParameters()[0]->getType()
-            : throw new MicroobjectLogicException(sprintf(
-                'Method "%s::%s" should have at least one parameter',
-                $method->getDeclaringClass(),
-                $method->getName()
-            ));
+        $className = (string) $method->getParameters()[0]->getType();
         return class_exists($className) || interface_exists($className)
             ? $className
-            : throw new MicroobjectLogicException(sprintf(
-                'Parameter has to be an instance of "%s". "%s" given',
-                MessageInterface::class,
-                $className
-            ));
+            : '';
     }
 
     /**
