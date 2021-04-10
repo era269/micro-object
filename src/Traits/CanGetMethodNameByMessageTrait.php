@@ -64,9 +64,7 @@ trait CanGetMethodNameByMessageTrait
         if (!is_subclass_of($parameterType, MessageInterface::class)) {
             return false;
         }
-        if ($method->getName() === 'process') {
-            return false;
-        }
+
         return $parameterType;
     }
 
