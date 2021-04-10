@@ -55,13 +55,19 @@ trait CanGetMethodNameByMessageTrait
      */
     private function getMessageTypeClassName(ReflectionMethod $method): string|false
     {
-        return !empty($method->getParameters())
-        && $method->getNumberOfParameters() === 1
-        && is_subclass_of($className = (string)$method->getParameters()[0]->getType(), MessageInterface::class)
-        /** @var class-string $className */
-        && $method->getName() !== 'process'
-            ? $className
-            : false;
+        if ($method->getNumberOfParameters() !== 1) {
+            return false;
+        }
+
+        $parameterType = (string)$method->getParameters()[0]->getType();
+
+        if (!is_subclass_of($parameterType, MessageInterface::class)) {
+            return false;
+        }
+        if ($method->getName() === 'process') {
+            return false;
+        }
+        return $parameterType;
     }
 
     /**
