@@ -23,8 +23,10 @@ use PHPUnit\Framework\TestCase;
 
 class NotebookPortTest extends TestCase
 {
-    const UNIQUE_ID_NOTEBOOK = 'notebook-unique-id';
-    const UNIQUE_ID_PAGE     = '1';
+    private const UNIQUE_ID_NOTEBOOK = 'notebook-unique-id';
+    private const UNIQUE_ID_PAGE     = '1';
+    private const WRONG_ID_PAGE     = '-1';
+
     private TestEventDispatcher $eventDispatcher;
 
     public function testGetUnExistingNotebook(): void
@@ -63,6 +65,7 @@ class NotebookPortTest extends TestCase
             ]);
 
         self::assertEquals(self::UNIQUE_ID_NOTEBOOK, $normalizedNotebookResponse['payload']['id']['value']);
+        self::assertEquals(Notebook::class, $normalizedNotebookResponse['payload']['@type']);
 
         return $eventStorage;
     }
@@ -96,6 +99,24 @@ class NotebookPortTest extends TestCase
             ->getPage([
                 'notebookId' => self::UNIQUE_ID_NOTEBOOK,
                 'pageId' => self::UNIQUE_ID_PAGE,
+            ]);
+
+        self::assertEquals(self::UNIQUE_ID_PAGE, $normalizedPageResponse['payload']['id']['value']);
+
+        return $eventStorage;
+    }
+
+    /**
+     * @depends testAddPage
+     */
+    public function testGetPageNotFound(EventStorageInterface $eventStorage): EventStorageInterface
+    {
+        $this->expectException(MicroobjectOutOfBoundsException::class);
+
+        $normalizedPageResponse = $this->getAutowiredNotebookPort($eventStorage)
+            ->getPage([
+                'notebookId' => self::UNIQUE_ID_NOTEBOOK,
+                'pageId' => self::WRONG_ID_PAGE,
             ]);
 
         self::assertEquals(self::UNIQUE_ID_PAGE, $normalizedPageResponse['payload']['id']['value']);
@@ -141,7 +162,7 @@ class NotebookPortTest extends TestCase
     }
 
     /**
-     * @depends testAddNotebook
+     * @depends testAddPage
      * @throws MicroobjectExceptionInterface
      */
     public function testWrongMessageProcessingCase(EventStorageInterface $eventStorage): void

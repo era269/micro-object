@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Era269\Microobject\Message\Traits;
 
 use DateTimeInterface;
-use Era269\Normalizable\Normalizable\DateTimeRfc3339Normalizable;
+use Era269\Normalizable\Object\DateTimeRfc3339Normalizable;
 
 trait CreatedAtAwareTrait
 {

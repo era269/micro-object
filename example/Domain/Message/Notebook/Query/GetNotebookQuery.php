@@ -28,10 +28,11 @@ final class GetNotebookQuery extends AbstractNotebookCollectionMessage implement
         );
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'notebookId' => $this->getNotebookId()->normalize(),
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

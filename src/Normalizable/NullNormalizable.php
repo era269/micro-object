@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Normalizable;
 
-use Era269\Normalizable\AbstractNormalizableObject;
+use Era269\Normalizable\Abstraction\AbstractNormalizable;
 
-class NullNormalizable extends AbstractNormalizableObject
+class NullNormalizable extends AbstractNormalizable
 {
     /**
      * @inheritDoc

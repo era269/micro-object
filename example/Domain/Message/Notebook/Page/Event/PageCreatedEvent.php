@@ -39,10 +39,11 @@ final class PageCreatedEvent extends AbstractPageMessage implements EventInterfa
         return $this->getCreatedAt();
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'text' => $this->text->normalize()
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

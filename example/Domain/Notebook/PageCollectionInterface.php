@@ -7,7 +7,7 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\CreatePageCo
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageMessageInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetPageQuery;
 use Era269\Microobject\Exception\MicroobjectExceptionInterface;
-use Era269\Microobject\MessageInterface;
+use Era269\Microobject\Message\ResponseInterface;
 use Era269\Microobject\MicroobjectCollectionInterface;
 
 interface PageCollectionInterface extends MicroobjectCollectionInterface
@@ -15,15 +15,15 @@ interface PageCollectionInterface extends MicroobjectCollectionInterface
     /**
      * @throws MicroobjectExceptionInterface
      */
-    public function getPage(GetPageQuery $query): MessageInterface;
+    public function getPage(GetPageQuery $query): ResponseInterface;
 
     /**
      * @throws MicroobjectExceptionInterface
      */
-    public function attachPage(CreatePageCommand $command): MessageInterface;
+    public function attachPage(CreatePageCommand $command): ResponseInterface;
 
     /**
      * @throws MicroobjectExceptionInterface
      */
-    public function processPageMessages(PageMessageInterface $message): MessageInterface;
+    public function processPageMessages(PageMessageInterface $message): ResponseInterface;
 }

@@ -34,11 +34,12 @@ final class LineAddedEvent extends AbstractPageMessage implements EventInterface
         return $this->getCreatedAt();
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'line' => $this->getLine(),
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 
     public function getLine(): string

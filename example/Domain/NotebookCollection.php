@@ -13,7 +13,7 @@ use Era269\Microobject\Example\Domain\Notebook\NotebookFactoryInterface;
 use Era269\Microobject\Example\Domain\Notebook\NotebookRepositoryInterface;
 use Era269\Microobject\Message\Response\BaseResponse;
 use Era269\Microobject\Message\Response\NullResponse;
-use Era269\Microobject\MessageInterface;
+use Era269\Microobject\Message\ResponseInterface;
 
 final class NotebookCollection extends AbstractMicroobjectCollection implements NotebookCollectionInterface
 {
@@ -46,7 +46,7 @@ final class NotebookCollection extends AbstractMicroobjectCollection implements 
     /**
      * @inheritDoc
      */
-    public function getNotebook(GetNotebookQuery $query): MessageInterface
+    public function getNotebook(GetNotebookQuery $query): ResponseInterface
     {
         return new BaseResponse(
             $this->notebookRepository->get(
@@ -55,7 +55,7 @@ final class NotebookCollection extends AbstractMicroobjectCollection implements 
         );
     }
 
-    public function attachNotebook(CreateNotebookCommand $command): MessageInterface
+    public function attachNotebook(CreateNotebookCommand $command): ResponseInterface
     {
         $this->notebookFactory->createNotebook(
             $command
@@ -64,7 +64,7 @@ final class NotebookCollection extends AbstractMicroobjectCollection implements 
         return new NullResponse();
     }
 
-    public function processNotebookMessage(NotebookMessageInterface $message): MessageInterface
+    public function processNotebookMessage(NotebookMessageInterface $message): ResponseInterface
     {
         $notebook = $this->notebookRepository->get(
             $message->getNotebookId()

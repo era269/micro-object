@@ -9,7 +9,7 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCom
 use Era269\Microobject\Example\Domain\Message\Notebook\NotebookMessageInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
 use Era269\Microobject\Exception\MicroobjectExceptionInterface;
-use Era269\Microobject\MessageInterface;
+use Era269\Microobject\Message\ResponseInterface;
 use Era269\Microobject\MicroobjectCollectionInterface;
 
 interface NotebookCollectionInterface extends MicroobjectCollectionInterface
@@ -17,15 +17,15 @@ interface NotebookCollectionInterface extends MicroobjectCollectionInterface
     /**
      * @throws MicroobjectExceptionInterface
      */
-    public function getNotebook(GetNotebookQuery $query): MessageInterface;
+    public function getNotebook(GetNotebookQuery $query): ResponseInterface;
 
     /**
      * @throws MicroobjectExceptionInterface
      */
-    public function attachNotebook(CreateNotebookCommand $command): MessageInterface;
+    public function attachNotebook(CreateNotebookCommand $command): ResponseInterface;
 
     /**
      * @throws MicroobjectExceptionInterface
      */
-    public function processNotebookMessage(NotebookMessageInterface $message): MessageInterface;
+    public function processNotebookMessage(NotebookMessageInterface $message): ResponseInterface;
 }

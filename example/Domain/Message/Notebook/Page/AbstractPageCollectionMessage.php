@@ -19,10 +19,11 @@ abstract class AbstractPageCollectionMessage extends AbstractMessage implements 
         $this->setNotebookId($notebookId);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'notebookId' => $this->getNotebookId()->normalize(),
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

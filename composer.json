@@ -7,7 +7,7 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.0",
-        "era269/normalizable": "^0.3",
+        "era269/normalizable": "^0.4",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {

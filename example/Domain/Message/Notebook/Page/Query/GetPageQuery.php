@@ -20,11 +20,12 @@ final class GetPageQuery extends AbstractPageCollectionMessage implements PageId
         $this->setPageId($pageId);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'pageId' => $this->getPageId()->normalize()
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 
     public static function denormalize(array $data): static

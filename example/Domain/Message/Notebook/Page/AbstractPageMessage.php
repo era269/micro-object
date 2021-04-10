@@ -19,10 +19,11 @@ abstract class AbstractPageMessage extends AbstractPageCollectionMessage impleme
         $this->setPageId($pageId);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'pageId' => $this->getPageId()->normalize(),
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

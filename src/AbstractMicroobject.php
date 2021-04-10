@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Era269\Microobject;
 
 use Era269\Microobject\Traits\MicroobjectTrait;
-use Era269\Normalizable\AbstractNormalizableObject;
+use Era269\Normalizable\Abstraction\AbstractNormalizable;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-abstract class AbstractMicroobject extends AbstractNormalizableObject implements MicroobjectInterface
+abstract class AbstractMicroobject extends AbstractNormalizable implements MicroobjectInterface
 {
     use MicroobjectTrait;
 

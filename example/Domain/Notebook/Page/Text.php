@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Era269\Microobject\Example\Domain\Notebook\Page;
 
 
-use Era269\Normalizable\AbstractNormalizableObject;
+use Era269\Normalizable\Abstraction\AbstractNormalizable;
 use Stringable;
 
-final class Text extends AbstractNormalizableObject implements Stringable
+final class Text extends AbstractNormalizable implements Stringable
 {
     /**
      * @var string[]

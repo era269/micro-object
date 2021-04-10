@@ -36,11 +36,12 @@ final class CreatePageCommand extends AbstractPageMessage implements Denormaliza
         return $this->text;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
-        return parent::getNormalized() + [
-                'text' => $this->text->normalize(),
-            ];
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 
 
