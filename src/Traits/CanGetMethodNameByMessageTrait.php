@@ -40,7 +40,7 @@ trait CanGetMethodNameByMessageTrait
 
         $selfReflection = new ReflectionObject($this);
         foreach ($selfReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            $messageTypeClassName = $this->getMessageTypeClassName($method);
+            $messageTypeClassName = $this->getMessageTypeClassNameOrFalse($method);
             if ($messageTypeClassName) {
                 $this->attachToDocumentation(
                     $method->getName(),
@@ -53,7 +53,7 @@ trait CanGetMethodNameByMessageTrait
     /**
      * @return class-string|false
      */
-    private function getMessageTypeClassName(ReflectionMethod $method): string|false
+    private function getMessageTypeClassNameOrFalse(ReflectionMethod $method): string|false
     {
         if ($method->getNumberOfParameters() !== 1) {
             return false;
