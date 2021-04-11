@@ -39,6 +39,7 @@ final class PageCollection extends AbstractMicroobjectCollection implements Page
         $this->pageFactory->createPage(
             $command
         );
+
         return new NullResponse();
     }
 

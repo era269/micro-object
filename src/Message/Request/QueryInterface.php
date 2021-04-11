@@ -8,5 +8,4 @@ use Era269\Microobject\Message\RequestInterface;
 
 interface QueryInterface extends RequestInterface
 {
-
 }

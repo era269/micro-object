@@ -6,18 +6,15 @@ namespace Era269\Microobject\Message\Traits;
 
 use Era269\Microobject\Message\MessageIdInterface;
 use Era269\Normalizable\NormalizableInterface;
+use Era269\Normalizable\Traits\AbstractNormalizableTrait;
 
 trait MessageTrait
 {
     use CreatedAtAwareTrait;
+    use AbstractNormalizableTrait;
 
     private MessageIdInterface $id;
     private NormalizableInterface $payload;
-
-    public function getId(): MessageIdInterface
-    {
-        return $this->id;
-    }
 
     /**
      * @return array<string, mixed>
@@ -29,6 +26,11 @@ trait MessageTrait
             'createdAt' => $this->createdAt->normalize(),
             'payload' => $this->getPayload()->normalize(),
         ];
+    }
+
+    public function getId(): MessageIdInterface
+    {
+        return $this->id;
     }
 
     final protected function setId(MessageIdInterface $id): void

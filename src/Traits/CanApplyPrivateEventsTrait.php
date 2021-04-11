@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Traits;
 
+use Era269\Microobject\Exception\MicroobjectLogicException;
 use Era269\Microobject\Message\EventInterface;
 use ReflectionMethod;
 use ReflectionObject;
@@ -15,34 +16,42 @@ trait CanApplyPrivateEventsTrait
      */
     private array $applyEventMap;
 
+    final protected function apply(EventInterface $event): void
+    {
+        $methodName = $this->getApplyEventMap()[$event::class]
+            ?? throw new MicroobjectLogicException(sprintf(
+                'Cannot apply "%s". It is unknown for the "%s"',
+                $event::class,
+                static::class
+            ));
+        $this->$methodName($event);
+    }
+
     /**
      * @return array<string, string>
      */
     private function getApplyEventMap(): array
     {
-        if (empty($this->applyEventMap)) {
+        if (!isset($this->applyEventMap)) {
+            $this->applyEventMap = [];
             $selfReflection = new ReflectionObject($this);
             foreach ($selfReflection->getMethods(ReflectionMethod::IS_PROTECTED) as $method) {
-                if ($this->isEventProcessingMethod($method)) {
-                    $eventClassName = (string) $method->getParameters()[0]->getType();
-                    $this->applyEventMap[$eventClassName] = $method->getName();
-                }
+                $this->tryAddToApplyEventMap($method);
             }
         }
 
         return $this->applyEventMap;
     }
 
-    final protected function apply(EventInterface $event): void
+    private function tryAddToApplyEventMap(ReflectionMethod $method): void
     {
-        $methodName = $this->getApplyEventMap()[$event::class];
-        $this->$methodName($event);
-    }
-
-    private function isEventProcessingMethod(ReflectionMethod $method): bool
-    {
-        return !empty($method->getParameters()) &&
-            $method->getNumberOfParameters() === 1 &&
-            is_subclass_of((string)$method->getParameters()[0]->getType(), EventInterface::class);
+        if ($method->getNumberOfParameters() !== 1) {
+            return;
+        }
+        $parameterTypeName = (string) $method->getParameters()[0]->getType();
+        if (!is_subclass_of($parameterTypeName, EventInterface::class)) {
+            return;
+        }
+        $this->applyEventMap[$parameterTypeName] = $method->getName();
     }
 }

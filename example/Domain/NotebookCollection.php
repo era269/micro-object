@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject\Example\Domain;
-
 
 use Era269\Microobject\AbstractMicroobjectCollection;
 use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCommand;

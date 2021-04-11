@@ -13,8 +13,8 @@ class BaseIdentifier extends AbstractNormalizable implements IdentifierInterface
 
     public function __construct(
         private string $value
-    ) {
-
+    )
+    {
     }
 
     /**
@@ -30,7 +30,7 @@ class BaseIdentifier extends AbstractNormalizable implements IdentifierInterface
      */
     public function equals(IdentifierInterface $other): bool
     {
-        return (string)$other === (string)$this;
+        return (string) $other === (string) $this;
     }
 
     /**
@@ -39,7 +39,7 @@ class BaseIdentifier extends AbstractNormalizable implements IdentifierInterface
     protected function getNormalized(): array
     {
         return [
-            self::FIELD_NAME_VALUE => $this->value
+            self::FIELD_NAME_VALUE => $this->value,
         ];
     }
 }

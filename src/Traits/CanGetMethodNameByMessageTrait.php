@@ -25,6 +25,7 @@ trait CanGetMethodNameByMessageTrait
         if (empty($this->ownMessages) && empty($this->proxyMessageInterfaces)) {
             $this->buildCache();
         }
+
         return $this->getOwnMessageProcessMethod($message)
             ?? $this->getMessageInterfaceProcessMethod($message)
             ?? throw new MicroobjectLogicException(sprintf(
@@ -41,6 +42,20 @@ trait CanGetMethodNameByMessageTrait
         $selfReflection = new ReflectionObject($this);
         foreach ($selfReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             $this->tryAttachToDocumentation($method);
+        }
+    }
+
+    private function tryAttachToDocumentation(ReflectionMethod $method): void
+    {
+        if ($method->getNumberOfParameters() !== 1) {
+            return;
+        }
+        $parameterType = (string) $method->getParameters()[0]->getType();
+        if (is_subclass_of($parameterType, MessageInterface::class)) {
+            $this->attachToDocumentation(
+                $method->getName(),
+                $parameterType
+            );
         }
     }
 
@@ -67,20 +82,7 @@ trait CanGetMethodNameByMessageTrait
                 return $methodName;
             }
         }
-        return null;
-    }
 
-    private function tryAttachToDocumentation(ReflectionMethod $method): void
-    {
-        if ($method->getNumberOfParameters() !== 1) {
-            return;
-        }
-        $parameterType = (string)$method->getParameters()[0]->getType();
-        if (is_subclass_of($parameterType, MessageInterface::class)) {
-            $this->attachToDocumentation(
-                $method->getName(),
-                $parameterType
-            );
-        }
+        return null;
     }
 }

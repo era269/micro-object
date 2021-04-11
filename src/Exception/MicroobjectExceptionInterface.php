@@ -9,5 +9,4 @@ use Throwable;
 
 interface MicroobjectExceptionInterface extends Throwable, NormalizableInterface
 {
-
 }

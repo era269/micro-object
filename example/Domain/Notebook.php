@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject\Example\Domain;
-
 
 use Era269\Microobject\AbstractMicroobject;
 use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCommand;
@@ -14,7 +12,6 @@ use Era269\Microobject\Example\Domain\Notebook\PageCollectionInterface;
 use Era269\Microobject\Message\Event\EventStreamInterface;
 use Era269\Microobject\Message\ResponseInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-
 
 final class Notebook extends AbstractMicroobject implements NotebookInterface
 {
@@ -38,6 +35,7 @@ final class Notebook extends AbstractMicroobject implements NotebookInterface
         $self->applyAndPublish(
             new NotebookCreatedEvent($command)
         );
+
         return $self;
     }
 

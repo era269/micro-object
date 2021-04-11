@@ -21,6 +21,15 @@ final class AddLineCommand extends AbstractPageMessage implements CommandInterfa
         parent::__construct($notebookId, $pageId);
     }
 
+    public static function denormalize(array $data): static
+    {
+        return new self(
+            new NotebookId($data['notebookId']),
+            new PageId($data['pageId']),
+            $data['line'],
+        );
+    }
+
     public function getLine(): string
     {
         return $this->line;
@@ -32,14 +41,5 @@ final class AddLineCommand extends AbstractPageMessage implements CommandInterfa
     protected function getNormalized(): array
     {
         return parent::getNormalized() + $this->getSelfNormalized();
-    }
-
-    public static function denormalize(array $data): static
-    {
-        return new self(
-            new NotebookId($data['notebookId']),
-            new PageId($data['pageId']),
-            $data['line'],
-        );
     }
 }

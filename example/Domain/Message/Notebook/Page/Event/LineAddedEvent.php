@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Page\Event;
-
 
 use DateTimeInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\AbstractPageMessage;
@@ -34,16 +32,16 @@ final class LineAddedEvent extends AbstractPageMessage implements EventInterface
         return $this->getCreatedAt();
     }
 
+    public function getLine(): string
+    {
+        return $this->line;
+    }
+
     /**
      * @inheritDoc
      */
     protected function getNormalized(): array
     {
         return parent::getNormalized() + $this->getSelfNormalized();
-    }
-
-    public function getLine(): string
-    {
-        return $this->line;
     }
 }

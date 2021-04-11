@@ -10,5 +10,6 @@ use Era269\Normalizable\NormalizableInterface;
 interface MessageInterface extends CreatedAtAwareInterface, NormalizableInterface, IdentifiableInterface
 {
     public function getId(): MessageIdInterface;
+
     public function getPayload(): NormalizableInterface;
 }

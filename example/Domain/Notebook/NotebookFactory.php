@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Domain\Notebook;
 
-
 use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCommand;
 use Era269\Microobject\Example\Domain\Notebook;
 use Era269\Microobject\Example\Domain\NotebookInterface;
@@ -16,7 +15,8 @@ final class NotebookFactory implements NotebookFactoryInterface
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
         private PageCollectionInterface $pageCollection
-    ) {
+    )
+    {
     }
 
     public function createNotebook(CreateNotebookCommand $command): NotebookInterface

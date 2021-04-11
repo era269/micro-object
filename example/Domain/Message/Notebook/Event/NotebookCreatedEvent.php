@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Event;
-
 
 use DateTimeInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\AbstractNotebookMessage;

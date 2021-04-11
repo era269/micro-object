@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Domain\Notebook\Page;
 
-
 use Era269\Normalizable\Abstraction\AbstractNormalizable;
 use Stringable;
 
@@ -25,7 +24,7 @@ final class Text extends AbstractNormalizable implements Stringable
         return new self(
             ...[
                 ...$this->lines,
-                $line
+                $line,
             ]
         );
     }
@@ -41,7 +40,7 @@ final class Text extends AbstractNormalizable implements Stringable
     protected function getNormalized(): array
     {
         return [
-            'lines' => $this->lines
+            'lines' => $this->lines,
         ];
     }
 }

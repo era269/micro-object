@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Tests;
 
-
 use Era269\Microobject\Example\Domain\Message\AbstractMessage;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageMessageInterface;
 use Era269\Microobject\Example\Domain\Notebook\NotebookId;
@@ -15,7 +14,8 @@ final class TestFailPageEvent extends AbstractMessage implements PageMessageInte
     public function __construct(
         private NotebookId $notebookId,
         private PageId $pageId
-    ) {
+    )
+    {
         parent::__construct();
     }
 
