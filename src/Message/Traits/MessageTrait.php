@@ -6,10 +6,12 @@ namespace Era269\Microobject\Message\Traits;
 
 use Era269\Microobject\Message\MessageIdInterface;
 use Era269\Normalizable\NormalizableInterface;
+use Era269\Normalizable\Traits\AbstractNormalizableTrait;
 
 trait MessageTrait
 {
     use CreatedAtAwareTrait;
+    use AbstractNormalizableTrait;
 
     private MessageIdInterface $id;
     private NormalizableInterface $payload;

@@ -26,8 +26,12 @@ class NotebookPortTest extends TestCase
     private const UNIQUE_ID_NOTEBOOK = 'notebook-unique-id';
     private const UNIQUE_ID_PAGE     = '1';
     private const WRONG_ID_PAGE      = '-1';
+
     private TestEventDispatcher $eventDispatcher;
 
+    /**
+     * @throws MicroobjectExceptionInterface
+     */
     public function testGetUnExistingNotebook(): void
     {
         $this->expectException(MicroobjectOutOfBoundsException::class);
@@ -71,6 +75,9 @@ class NotebookPortTest extends TestCase
         );
     }
 
+    /**
+     * @throws MicroobjectExceptionInterface
+     */
     public function testAddNotebook(): EventStorageInterface
     {
         $eventStorage = new EventStorage();
@@ -93,6 +100,8 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testAddNotebook
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function testGetNotebook(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -109,6 +118,8 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testGetNotebook
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function testAddPage(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -129,6 +140,8 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testAddPage
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function testGetPage(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -145,6 +158,8 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testAddPage
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function testGetPageNotFound(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -163,6 +178,8 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testGetPage
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function testAddLine(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -180,6 +197,8 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testAddLine
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function testGetText(EventStorageInterface $eventStorage): void
     {
@@ -200,6 +219,7 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testAddPage
+     *
      * @throws MicroobjectExceptionInterface
      */
     public function testWrongMessageProcessingCase(EventStorageInterface $eventStorage): void

@@ -33,6 +33,7 @@ trait CanApplyPrivateEventsTrait
     private function getApplyEventMap(): array
     {
         if (!isset($this->applyEventMap)) {
+            $this->applyEventMap = [];
             $selfReflection = new ReflectionObject($this);
             foreach ($selfReflection->getMethods(ReflectionMethod::IS_PROTECTED) as $method) {
                 $this->tryAddToApplyEventMap($method);
