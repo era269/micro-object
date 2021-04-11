@@ -1,17 +1,15 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject\Example\Domain\Notebook;
 
-
+use Era269\Microobject\AbstractMicroobject;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\AddLineCommand;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\CreatePageCommand;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Event\LineAddedEvent;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Event\PageCreatedEvent;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetTextQuery;
 use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
-use Era269\Microobject\AbstractMicroobject;
 use Era269\Microobject\Example\Domain\Notebook\Page\Text;
 use Era269\Microobject\Message\Event\EventStreamInterface;
 use Era269\Microobject\Message\Response\BaseResponse;
@@ -42,6 +40,7 @@ final class Page extends AbstractMicroobject implements PageInterface
                 $command
             )
         );
+
         return $self;
     }
 
@@ -54,12 +53,8 @@ final class Page extends AbstractMicroobject implements PageInterface
         foreach ($eventStream as $event) {
             $self->apply($event);
         }
-        return $self;
-    }
 
-    public function getId(): PageId
-    {
-        return $this->id;
+        return $self;
     }
 
     public function addLine(AddLineCommand $command): ResponseInterface
@@ -67,6 +62,7 @@ final class Page extends AbstractMicroobject implements PageInterface
         $this->applyAndPublish(
             new LineAddedEvent($command)
         );
+
         return new NullResponse();
     }
 
@@ -97,5 +93,10 @@ final class Page extends AbstractMicroobject implements PageInterface
             'id' => $this->getId()->normalize(),
             'text' => $this->text->normalize(),
         ];
+    }
+
+    public function getId(): PageId
+    {
+        return $this->id;
     }
 }

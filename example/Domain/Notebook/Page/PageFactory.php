@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Domain\Notebook\Page;
 
-
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\CreatePageCommand;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageFactoryInterface;
 use Era269\Microobject\Example\Domain\Notebook\Page;
@@ -16,7 +15,8 @@ final class PageFactory implements PageFactoryInterface
 {
     public function __construct(
         private EventDispatcherInterface $eventDispatcher
-    ) {
+    )
+    {
     }
 
     public function createPage(CreatePageCommand $command): PageInterface

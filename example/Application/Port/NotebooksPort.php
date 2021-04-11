@@ -10,6 +10,7 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetPageQuery;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetTextQuery;
 use Era269\Microobject\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
 use Era269\Microobject\Example\Domain\Notebook\NotebookCollectionFactory;
+use Era269\Microobject\Exception\MicroobjectExceptionInterface;
 
 final class NotebooksPort
 {
@@ -24,7 +25,10 @@ final class NotebooksPort
      * POST /notebooks
      *
      * @param array<string, mixed> $request
+     *
      * @return array<string, mixed>
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function addNotebook(array $request): array
     {
@@ -40,7 +44,10 @@ final class NotebooksPort
      * POST /notebooks/{notebookId}/pages
      *
      * @param array<string, mixed> $request
+     *
      * @return array<string, mixed>
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function addPage(array $request): array
     {
@@ -56,7 +63,10 @@ final class NotebooksPort
      * POST /notebooks/{notebookId}/pages/{pageId}/text/add-line
      *
      * @param array<string, mixed> $request
+     *
      * @return array<string, mixed>
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function addLine(array $request): array
     {
@@ -72,7 +82,10 @@ final class NotebooksPort
      * GET /notebooks/{notebookId}/pages/{pageId}/text
      *
      * @param array<string, mixed> $request
+     *
      * @return array<string, mixed>
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function getText(array $request): array
     {
@@ -88,7 +101,10 @@ final class NotebooksPort
      * GET /notebooks/{notebookId}/pages/{pageId}
      *
      * @param array<string, mixed> $request
+     *
      * @return array<string, mixed>
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function getPage(array $request): array
     {
@@ -104,7 +120,10 @@ final class NotebooksPort
      * GET /notebooks/{notebookId}
      *
      * @param array<string, mixed> $request
+     *
      * @return array<string, mixed>
+     *
+     * @throws MicroobjectExceptionInterface
      */
     public function getNotebook(array $request): array
     {

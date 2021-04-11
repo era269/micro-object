@@ -11,7 +11,8 @@ final class NotebookCollectionFactory
     public function __construct(
         private NotebookRepositoryInterface $notebookRepository,
         private NotebookFactoryInterface $notebookFactory
-    ) {
+    )
+    {
     }
 
     public function create(): NotebookCollectionInterface

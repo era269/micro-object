@@ -7,5 +7,4 @@ use Era269\Microobject\Example\Domain\Notebook\NotebookIdAwareInterface;
 
 interface NotebookMessageInterface extends NotebookCollectionMessageInterface, NotebookIdAwareInterface
 {
-
 }

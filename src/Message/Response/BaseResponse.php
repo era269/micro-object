@@ -12,7 +12,8 @@ class BaseResponse extends AbstractMessage implements ResponseInterface
 {
     public function __construct(
         NormalizableInterface $payload
-    ) {
+    )
+    {
         parent::__construct();
         $this->setPayload($payload);
     }

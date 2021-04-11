@@ -8,5 +8,4 @@ use Era269\Microobject\MessageInterface;
 
 interface ResponseInterface extends MessageInterface
 {
-
 }

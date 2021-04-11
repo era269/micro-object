@@ -5,8 +5,8 @@ namespace Era269\Microobject\Example\Domain\Message\Notebook\Page\Query;
 
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\AbstractPageCollectionMessage;
 use Era269\Microobject\Example\Domain\Notebook\NotebookId;
-use Era269\Microobject\Example\Domain\Notebook\Page\PageIdAwareInterface;
 use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
+use Era269\Microobject\Example\Domain\Notebook\Page\PageIdAwareInterface;
 use Era269\Microobject\Example\Domain\Notebook\Page\Traits\PageIdAwareTrait;
 use Era269\Normalizable\DenormalizableInterface;
 
@@ -20,19 +20,19 @@ final class GetPageQuery extends AbstractPageCollectionMessage implements PageId
         $this->setPageId($pageId);
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
-    }
-
     public static function denormalize(array $data): static
     {
         return new self(
             new NotebookId($data['notebookId']),
             new PageId($data['pageId']),
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getNormalized(): array
+    {
+        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

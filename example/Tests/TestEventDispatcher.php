@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Tests;
 
-
 use Era269\Microobject\Message\EventInterface;
 use Era269\Microobject\MessageProcessorInterface;
 use LogicException;
@@ -19,7 +18,8 @@ final class TestEventDispatcher implements EventDispatcherInterface
     public function __construct(
         private array $listeners = [],
         private array $dispatchedEvents = []
-    ) {
+    )
+    {
     }
 
     /**

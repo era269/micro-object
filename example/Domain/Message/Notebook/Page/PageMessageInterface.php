@@ -7,5 +7,4 @@ use Era269\Microobject\Example\Domain\Notebook\Page\PageIdAwareInterface;
 
 interface PageMessageInterface extends PageCollectionMessageInterface, PageIdAwareInterface
 {
-
 }

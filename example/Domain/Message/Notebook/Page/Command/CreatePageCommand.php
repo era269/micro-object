@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Page\Command;
-
 
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\AbstractPageMessage;
 use Era269\Microobject\Example\Domain\Notebook\NotebookId;
@@ -43,6 +41,4 @@ final class CreatePageCommand extends AbstractPageMessage implements Denormaliza
     {
         return parent::getNormalized() + $this->getSelfNormalized();
     }
-
-
 }

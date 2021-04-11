@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Query;
-
 
 use Era269\Microobject\Example\Domain\Message\Notebook\AbstractNotebookCollectionMessage;
 use Era269\Microobject\Example\Domain\Notebook\NotebookId;

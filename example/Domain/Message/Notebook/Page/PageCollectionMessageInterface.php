@@ -7,5 +7,4 @@ use Era269\Microobject\Example\Domain\Message\Notebook\NotebookMessageInterface;
 
 interface PageCollectionMessageInterface extends NotebookMessageInterface
 {
-
 }

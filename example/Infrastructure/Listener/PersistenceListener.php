@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Infrastructure\Listener;
 
-
 use DomainException;
 use Era269\Microobject\Message\Event\EventStorageInterface;
 use Era269\Microobject\Message\EventInterface;
@@ -19,7 +18,8 @@ final class PersistenceListener implements MessageProcessorInterface
 
     public function __construct(
         private EventStorageInterface $eventStorage
-    ) {
+    )
+    {
     }
 
     public function onEvent(EventInterface $event): void
