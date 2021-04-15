@@ -12,9 +12,9 @@ trait MicroobjectTrait
     use CanApplyPrivateEventsTrait;
     use CanPublishEventsTrait;
 
-    protected function applyAndPublish(EventInterface $event): void
+    protected function applyAndPublish(EventInterface ...$events): void
     {
-        $this->apply($event);
-        $this->publish($event);
+        $this->apply(...$events);
+        $this->publish(...$events);
     }
 }

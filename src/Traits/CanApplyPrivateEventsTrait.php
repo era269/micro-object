@@ -16,7 +16,14 @@ trait CanApplyPrivateEventsTrait
      */
     private array $applyEventMap;
 
-    final protected function apply(EventInterface $event): void
+    final protected function apply(EventInterface ...$events): void
+    {
+        foreach ($events as $event) {
+            $this->applyThat($event);
+        }
+    }
+
+    private function applyThat(EventInterface $event): void
     {
         $methodName = $this->getApplyEventMap()[$event::class]
             ?? throw new MicroobjectLogicException(sprintf(

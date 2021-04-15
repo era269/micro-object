@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Traits;
 
+use Era269\Microobject\Message\EventInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 trait CanPublishEventsTrait
@@ -15,7 +16,14 @@ trait CanPublishEventsTrait
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    final protected function publish(object $event): void
+    final protected function publish(EventInterface ...$events): void
+    {
+        foreach ($events as $event) {
+            $this->publishThat($event);
+        }
+    }
+
+    private function publishThat(object $event): void
     {
         $this->eventDispatcher->dispatch($event);
     }
