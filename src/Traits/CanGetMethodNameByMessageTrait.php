@@ -27,15 +27,15 @@ trait CanGetMethodNameByMessageTrait
         );
     }
 
-    final protected function setCache(CacheInterface $cache): void
+    final protected function setCache(?CacheInterface $cache = null): void
     {
-        $this->cache = $cache;
+        $this->cache = $cache ?? new InMemoryCache();
     }
 
     private function getCache(): CacheInterface
     {
         if (empty($this->cache)) {
-            $this->cache = new InMemoryCache();
+            $this->setCache();
         }
         return $this->cache;
     }
