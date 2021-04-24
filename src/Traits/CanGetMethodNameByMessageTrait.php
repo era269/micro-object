@@ -3,31 +3,56 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Traits;
 
+use Era269\Microobject\Cache\InMemoryCache;
 use Era269\Microobject\Exception\MicroobjectLogicException;
 use Era269\Microobject\MessageInterface;
+use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionObject;
 
 trait CanGetMethodNameByMessageTrait
 {
+    private CacheInterface $cache;
+
+    private bool $cacheInitialized = false;
+
     /**
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    private array $ownMessages;
-    /**
-     * @var array<string, string>
-     */
-    private array $proxyMessageInterfaces;
+    private function getInterfaceMap(): array
+    {
+        return $this->getCache()->get(
+            $this->getInterfaceMapCacheKey()
+        );
+    }
+
+    final protected function setCache(CacheInterface $cache): void
+    {
+        $this->cache = $cache;
+    }
+
+    private function getCache(): CacheInterface
+    {
+        if (empty($this->cache)) {
+            $this->cache = new InMemoryCache();
+        }
+        return $this->cache;
+    }
+
+    private function attachToClassNameMap(string $messageClassName, string $methodName): void
+    {
+        $this->getCache()->set(
+            $this->getClassNameCacheKey($messageClassName),
+            $methodName
+        );
+    }
 
     private function getMethodNameByProcessedMessage(MessageInterface $message): string
     {
-        if (empty($this->ownMessages) && empty($this->proxyMessageInterfaces)) {
-            $this->buildCache();
-        }
-
-        return $this->getOwnMessageProcessMethod($message)
-            ?? $this->getMessageInterfaceProcessMethod($message)
+        return $this->tryGetFromCache($message)
+            ?? $this->tryGetProcessMethod($message)
+            ?? $this->tryGetProcessMethodByMessageInterface($message)
             ?? throw new MicroobjectLogicException(sprintf(
                 'Incorrect internal method call: current object doesn\'t know how to process the message "%s"',
                 $message::class
@@ -36,53 +61,73 @@ trait CanGetMethodNameByMessageTrait
 
     private function buildCache(): void
     {
-        $this->ownMessages = [];
-        $this->proxyMessageInterfaces = [];
-
         $selfReflection = new ReflectionObject($this);
+        $interfaceMap = [];
         foreach ($selfReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            $this->tryAttachToDocumentation($method);
+            if ($method->getNumberOfParameters() !== 1) {
+                continue;
+            }
+            $parameterType = (string) $method->getParameters()[0]->getType();
+            if (!is_subclass_of($parameterType, MessageInterface::class)) {
+                continue;
+            }
+
+            $methodName = $method->getName();
+            if ((new ReflectionClass($parameterType))->isInterface()) {
+
+                $interfaceMap[$parameterType] = $methodName;
+            } else {
+
+                $this->attachToClassNameMap($parameterType, $methodName);
+            }
         }
+        $this->getCache()->set(
+            $this->getInterfaceMapCacheKey(),
+            $interfaceMap
+        );
     }
 
-    private function tryAttachToDocumentation(ReflectionMethod $method): void
+    private function tryGetProcessMethod(MessageInterface $message): ?string
     {
-        if ($method->getNumberOfParameters() !== 1) {
-            return;
+        if (!$this->cacheInitialized) {
+            $this->buildCache();
+            $this->cacheInitialized = true;
         }
-        $parameterType = (string) $method->getParameters()[0]->getType();
-        if (is_subclass_of($parameterType, MessageInterface::class)) {
-            $this->attachToDocumentation(
-                $method->getName(),
-                $parameterType
-            );
-        }
+
+        return $this->tryGetFromCache($message);
     }
 
-    /**
-     * @param class-string $messageClassName
-     */
-    private function attachToDocumentation(string $methodName, string $messageClassName): void
+    private function tryGetProcessMethodByMessageInterface(MessageInterface $message): ?string
     {
-        (new ReflectionClass($messageClassName))->isInterface()
-            ? $this->proxyMessageInterfaces[$messageClassName] = $methodName
-            : $this->ownMessages[$messageClassName] = $methodName;
-    }
-
-    private function getOwnMessageProcessMethod(MessageInterface $message): ?string
-    {
-        return $this->ownMessages[$message::class]
-            ?? null;
-    }
-
-    private function getMessageInterfaceProcessMethod(MessageInterface $message): ?string
-    {
-        foreach ($this->proxyMessageInterfaces as $proxyMessageInterface => $methodName) {
-            if ($message instanceof $proxyMessageInterface) {
+        foreach ($this->getInterfaceMap() as $interface => $methodName) {
+            if ($message instanceof $interface) {
+                $this->attachToClassNameMap($message::class, $methodName);
                 return $methodName;
             }
         }
 
         return null;
+    }
+
+    private function getClassNameCacheKey(string $messageClassName): string
+    {
+        return $this->getCacheKey($messageClassName);
+    }
+
+    private function getCacheKey(string $salt = ''): string
+    {
+        return md5($this::class . $salt);
+    }
+
+    private function tryGetFromCache(MessageInterface $message): ?string
+    {
+        return $this->getCache()->get(
+            $this->getClassNameCacheKey($message::class)
+        );
+    }
+
+    private function getInterfaceMapCacheKey(): string
+    {
+        return $this->getCacheKey('interfaceMap');
     }
 }

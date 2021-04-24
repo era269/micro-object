@@ -8,7 +8,8 @@
     "require": {
         "php": "^8.0",
         "era269/normalizable": "^0.4",
-        "psr/event-dispatcher": "^1.0"
+        "psr/event-dispatcher": "^1.0",
+        "psr/simple-cache": "^1.0"
     },
     "require-dev": {
         "phpstan/extension-installer": "^1.1",
