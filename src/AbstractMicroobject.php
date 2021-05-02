@@ -13,9 +13,8 @@ abstract class AbstractMicroobject extends AbstractNormalizable implements Micro
 {
     use MicroobjectTrait;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, ?CacheInterface $cache = null)
+    public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->setEventDispatcher($eventDispatcher);
-        $this->setCache($cache);
     }
 }

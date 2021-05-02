@@ -42,39 +42,6 @@ class NotebookPortTest extends TestCase
             ]);
     }
 
-    private function getAutowiredNotebookPort(EventStorageInterface $eventStorage): NotebooksPort
-    {
-        return new NotebooksPort(
-            $this->getAutowiredNotebookCollectionFactory($eventStorage)
-        );
-    }
-
-    private function getAutowiredNotebookCollectionFactory(EventStorageInterface $eventStorage): NotebookCollectionFactory
-    {
-        $this->eventDispatcher = new TestEventDispatcher(
-            [
-                new PersistenceListener(
-                    $eventStorage
-                ),
-            ]);
-
-        $pageFactory = new PageFactory(
-            $this->eventDispatcher
-        );
-        $notebookFactory = new Notebook\NotebookFactory(
-            $this->eventDispatcher,
-            new PageCollection(
-                new PageRepository($eventStorage, $pageFactory),
-                $pageFactory
-            )
-        );
-
-        return new NotebookCollectionFactory(
-            new NotebookRepository($eventStorage, $notebookFactory),
-            $notebookFactory
-        );
-    }
-
     /**
      * @throws MicroobjectExceptionInterface
      */
@@ -232,5 +199,38 @@ class NotebookPortTest extends TestCase
                 new Notebook\NotebookId(self::UNIQUE_ID_NOTEBOOK),
                 new Notebook\Page\PageId(self::UNIQUE_ID_PAGE),
             ));
+    }
+
+    private function getAutowiredNotebookPort(EventStorageInterface $eventStorage): NotebooksPort
+    {
+        return new NotebooksPort(
+            $this->getAutowiredNotebookCollectionFactory($eventStorage)
+        );
+    }
+
+    private function getAutowiredNotebookCollectionFactory(EventStorageInterface $eventStorage): NotebookCollectionFactory
+    {
+        $this->eventDispatcher = new TestEventDispatcher(
+            [
+                new PersistenceListener(
+                    $eventStorage
+                ),
+            ]);
+
+        $pageFactory = new PageFactory(
+            $this->eventDispatcher
+        );
+        $notebookFactory = new Notebook\NotebookFactory(
+            $this->eventDispatcher,
+            new PageCollection(
+                new PageRepository($eventStorage, $pageFactory),
+                $pageFactory
+            )
+        );
+
+        return new NotebookCollectionFactory(
+            new NotebookRepository($eventStorage, $notebookFactory),
+            $notebookFactory
+        );
     }
 }
