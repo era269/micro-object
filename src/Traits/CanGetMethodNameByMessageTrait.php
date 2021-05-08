@@ -3,66 +3,53 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Traits;
 
-use Era269\Microobject\Cache\InMemoryCache;
 use Era269\Microobject\Exception\MicroobjectLogicException;
 use Era269\Microobject\MessageInterface;
-use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 use ReflectionMethod;
-use ReflectionObject;
 
 trait CanGetMethodNameByMessageTrait
 {
-    private CacheInterface $cache;
+    /**
+     * @var array<string, mixed>
+     */
+    private static array $methodNamesMap;
+    private static string $interfacesMapKey = 'interfaces';
 
-    private bool $cacheInitialized = false;
+    private static function getMethodNameByProcessedMessage(MessageInterface $message): string
+    {
+        $processingMethodName = static::getMap(static::class)[$message::class] ?? null;
+        if ($processingMethodName) {
+            return $processingMethodName;
+        }
+        foreach (static::getInterfaceMap(static::class) as $interface => $methodName) {
+            if ($message instanceof $interface) {
+                return $methodName;
+            }
+        }
+
+        throw new MicroobjectLogicException(sprintf(
+            'Incorrect internal method call: "%s" doesn\'t know how to process the message "%s"',
+            static::class,
+            $message::class
+        ));
+    }
 
     /**
-     * @return array<string, string>
+     * @param class-string $className
+     *
+     * @return array<string, mixed>
      */
-    private function getInterfaceMap(): array
+    private static function getMap(string $className): array
     {
-        return $this->getCache()->get(
-            $this->getInterfaceMapCacheKey()
-        );
-    }
-
-    final protected function setCache(?CacheInterface $cache = null): void
-    {
-        $this->cache = $cache ?? new InMemoryCache();
-    }
-
-    private function getCache(): CacheInterface
-    {
-        if (empty($this->cache)) {
-            $this->setCache();
+        if (isset(static::$methodNamesMap[$className])) {
+            return static::$methodNamesMap[$className];
         }
-        return $this->cache;
-    }
+        static::$methodNamesMap[$className] = [
+            static::$interfacesMapKey => [],
+        ];
 
-    private function attachToClassNameMap(string $messageClassName, string $methodName): void
-    {
-        $this->getCache()->set(
-            $this->getClassNameCacheKey($messageClassName),
-            $methodName
-        );
-    }
-
-    private function getMethodNameByProcessedMessage(MessageInterface $message): string
-    {
-        return $this->tryGetFromCache($message)
-            ?? $this->tryGetProcessMethod($message)
-            ?? $this->tryGetProcessMethodByMessageInterface($message)
-            ?? throw new MicroobjectLogicException(sprintf(
-                'Incorrect internal method call: current object doesn\'t know how to process the message "%s"',
-                $message::class
-            ));
-    }
-
-    private function buildCache(): void
-    {
-        $selfReflection = new ReflectionObject($this);
-        $interfaceMap = [];
+        $selfReflection = new ReflectionClass($className);
         foreach ($selfReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if ($method->getNumberOfParameters() !== 1) {
                 continue;
@@ -74,60 +61,22 @@ trait CanGetMethodNameByMessageTrait
 
             $methodName = $method->getName();
             if ((new ReflectionClass($parameterType))->isInterface()) {
-
-                $interfaceMap[$parameterType] = $methodName;
+                static::$methodNamesMap[$className][static::$interfacesMapKey][$parameterType] = $methodName;
             } else {
-
-                $this->attachToClassNameMap($parameterType, $methodName);
-            }
-        }
-        $this->getCache()->set(
-            $this->getInterfaceMapCacheKey(),
-            $interfaceMap
-        );
-    }
-
-    private function tryGetProcessMethod(MessageInterface $message): ?string
-    {
-        if (!$this->cacheInitialized) {
-            $this->buildCache();
-            $this->cacheInitialized = true;
-        }
-
-        return $this->tryGetFromCache($message);
-    }
-
-    private function tryGetProcessMethodByMessageInterface(MessageInterface $message): ?string
-    {
-        foreach ($this->getInterfaceMap() as $interface => $methodName) {
-            if ($message instanceof $interface) {
-                $this->attachToClassNameMap($message::class, $methodName);
-                return $methodName;
+                static::$methodNamesMap[$className][$parameterType] = $methodName;
             }
         }
 
-        return null;
+        return static::$methodNamesMap[$className];
     }
 
-    private function getClassNameCacheKey(string $messageClassName): string
+    /**
+     * @param class-string $className
+     *
+     * @return array<string, string>
+     */
+    private static function getInterfaceMap(string $className): array
     {
-        return $this->getCacheKey($messageClassName);
-    }
-
-    private function getCacheKey(string $salt = ''): string
-    {
-        return md5($this::class . $salt);
-    }
-
-    private function tryGetFromCache(MessageInterface $message): ?string
-    {
-        return $this->getCache()->get(
-            $this->getClassNameCacheKey($message::class)
-        );
-    }
-
-    private function getInterfaceMapCacheKey(): string
-    {
-        return $this->getCacheKey('interfaceMap');
+        return static::getMap($className)[static::$interfacesMapKey];
     }
 }
