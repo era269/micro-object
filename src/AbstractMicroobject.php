@@ -7,7 +7,6 @@ namespace Era269\Microobject;
 use Era269\Microobject\Traits\MicroobjectTrait;
 use Era269\Normalizable\Abstraction\AbstractNormalizable;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\SimpleCache\CacheInterface;
 
 abstract class AbstractMicroobject extends AbstractNormalizable implements MicroobjectInterface
 {
