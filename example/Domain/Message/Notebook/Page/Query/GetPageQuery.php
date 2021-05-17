@@ -27,12 +27,4 @@ final class GetPageQuery extends AbstractPageCollectionMessage implements PageId
             new PageId($data['pageId']),
         );
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
-    }
 }

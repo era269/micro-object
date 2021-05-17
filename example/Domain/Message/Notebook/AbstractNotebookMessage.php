@@ -15,12 +15,4 @@ abstract class AbstractNotebookMessage extends AbstractNotebookCollectionMessage
         parent::__construct();
         $this->setNotebookId($notebookId);
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
-    }
 }

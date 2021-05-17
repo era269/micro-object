@@ -15,7 +15,7 @@ final class CreateNotebookCommand extends AbstractNotebookCollectionMessage impl
 
     public function __construct(
         NotebookId $notebookId,
-        private string $notebookName
+        protected string $notebookName
     )
     {
         parent::__construct();
@@ -33,13 +33,5 @@ final class CreateNotebookCommand extends AbstractNotebookCollectionMessage impl
     public function getNotebookName(): string
     {
         return $this->notebookName;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

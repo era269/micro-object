@@ -16,12 +16,4 @@ abstract class AbstractPageCollectionMessage extends AbstractMessage implements 
         parent::__construct();
         $this->setNotebookId($notebookId);
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
-    }
 }

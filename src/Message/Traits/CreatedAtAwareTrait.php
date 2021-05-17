@@ -9,7 +9,7 @@ use Era269\Normalizable\Object\DateTimeRfc3339Normalizable;
 
 trait CreatedAtAwareTrait
 {
-    private DateTimeRfc3339Normalizable $createdAt;
+    protected DateTimeRfc3339Normalizable $createdAt;
 
     public function getCreatedAt(): DateTimeInterface
     {
