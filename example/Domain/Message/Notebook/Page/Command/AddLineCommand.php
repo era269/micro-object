@@ -15,7 +15,7 @@ final class AddLineCommand extends AbstractPageMessage implements CommandInterfa
     public function __construct(
         NotebookId $notebookId,
         PageId $pageId,
-        private string $line,
+        protected string $line,
     )
     {
         parent::__construct($notebookId, $pageId);
@@ -33,13 +33,5 @@ final class AddLineCommand extends AbstractPageMessage implements CommandInterfa
     public function getLine(): string
     {
         return $this->line;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

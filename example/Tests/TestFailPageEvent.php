@@ -12,8 +12,8 @@ use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
 final class TestFailPageEvent extends AbstractMessage implements PageMessageInterface
 {
     public function __construct(
-        private NotebookId $notebookId,
-        private PageId $pageId
+        protected NotebookId $notebookId,
+        protected PageId $pageId
     )
     {
         parent::__construct();

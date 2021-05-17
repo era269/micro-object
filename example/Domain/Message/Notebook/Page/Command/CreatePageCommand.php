@@ -14,7 +14,7 @@ final class CreatePageCommand extends AbstractPageMessage implements Denormaliza
     public function __construct(
         NotebookId $notebookId,
         PageId $pageId,
-        private Text $text,
+        protected Text $text,
     )
     {
         parent::__construct($notebookId, $pageId);
@@ -32,13 +32,5 @@ final class CreatePageCommand extends AbstractPageMessage implements Denormaliza
     public function getText(): Text
     {
         return $this->text;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

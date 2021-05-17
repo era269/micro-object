@@ -25,12 +25,4 @@ final class GetNotebookQuery extends AbstractNotebookCollectionMessage implement
             new NotebookId($data['notebookId']),
         );
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
-    }
 }

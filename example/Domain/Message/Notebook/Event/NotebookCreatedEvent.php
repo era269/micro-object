@@ -11,7 +11,7 @@ use Era269\Microobject\Message\EventInterface;
 
 final class NotebookCreatedEvent extends AbstractNotebookMessage implements EventInterface
 {
-    private string $notebookName;
+    protected string $notebookName;
 
     public function __construct(CreateNotebookCommand $command)
     {
@@ -32,13 +32,5 @@ final class NotebookCreatedEvent extends AbstractNotebookMessage implements Even
     public function getOccurredAt(): DateTimeInterface
     {
         return $this->getCreatedAt();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

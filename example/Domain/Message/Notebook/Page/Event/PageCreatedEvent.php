@@ -12,7 +12,7 @@ use Era269\Microobject\Message\EventInterface;
 
 final class PageCreatedEvent extends AbstractPageMessage implements EventInterface
 {
-    private Text $text;
+    protected Text $text;
 
     public function __construct(
         CreatePageCommand $command
@@ -35,13 +35,5 @@ final class PageCreatedEvent extends AbstractPageMessage implements EventInterfa
     public function getOccurredAt(): DateTimeInterface
     {
         return $this->getCreatedAt();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }

@@ -7,7 +7,7 @@ use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
 
 trait PageIdAwareTrait
 {
-    private PageId $pageId;
+    protected PageId $pageId;
 
     public function getPageId(): PageId
     {

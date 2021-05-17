@@ -11,7 +11,7 @@ use Era269\Microobject\Message\EventInterface;
 
 final class LineAddedEvent extends AbstractPageMessage implements EventInterface
 {
-    private string $line;
+    protected string $line;
 
     public function __construct(AddLineCommand $command)
     {
@@ -35,13 +35,5 @@ final class LineAddedEvent extends AbstractPageMessage implements EventInterface
     public function getLine(): string
     {
         return $this->line;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return parent::getNormalized() + $this->getSelfNormalized();
     }
 }
