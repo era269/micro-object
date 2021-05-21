@@ -8,9 +8,9 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\CreatePageCo
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageFactoryInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageMessageInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetPageQuery;
+use Era269\Microobject\Example\Domain\Message\Response\BaseResponse;
+use Era269\Microobject\Example\Domain\Message\Response\NullResponse;
 use Era269\Microobject\Example\Domain\Notebook\Page\PageRepositoryInterface;
-use Era269\Microobject\Message\Response\BaseResponse;
-use Era269\Microobject\Message\Response\NullResponse;
 use Era269\Microobject\Message\ResponseInterface;
 
 final class PageCollection extends AbstractMicroobjectCollection implements PageCollectionInterface

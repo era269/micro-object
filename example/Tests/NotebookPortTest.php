@@ -16,9 +16,9 @@ use Era269\Microobject\Example\Infrastructure\Listener\PersistenceListener;
 use Era269\Microobject\Example\Infrastructure\Repository\NotebookRepository;
 use Era269\Microobject\Example\Infrastructure\Repository\PageRepository;
 use Era269\Microobject\Exception\MicroobjectExceptionInterface;
-use Era269\Microobject\Exception\MicroobjectLogicException;
 use Era269\Microobject\Exception\MicroobjectOutOfBoundsException;
 use Era269\Microobject\Message\Event\EventStorageInterface;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 class NotebookPortTest extends TestCase
@@ -186,12 +186,10 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testAddPage
-     *
-     * @throws MicroobjectExceptionInterface
      */
     public function testWrongMessageProcessingCase(EventStorageInterface $eventStorage): void
     {
-        $this->expectException(MicroobjectLogicException::class);
+        $this->expectException(LogicException::class);
 
         $this->getAutowiredNotebookCollectionFactory($eventStorage)
             ->create()

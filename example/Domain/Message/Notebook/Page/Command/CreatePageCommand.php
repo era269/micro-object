@@ -3,21 +3,25 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Page\Command;
 
-use Era269\Microobject\Example\Domain\Message\Notebook\Page\AbstractPageMessage;
+use Era269\Microobject\Example\Domain\Message\Notebook\Page\AbstractPageCollectionMessage;
 use Era269\Microobject\Example\Domain\Notebook\NotebookId;
 use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
 use Era269\Microobject\Example\Domain\Notebook\Page\Text;
+use Era269\Microobject\Example\Domain\Notebook\Page\Traits\PageIdAwareTrait;
 use Era269\Normalizable\DenormalizableInterface;
 
-final class CreatePageCommand extends AbstractPageMessage implements DenormalizableInterface
+final class CreatePageCommand extends AbstractPageCollectionMessage implements DenormalizableInterface
 {
+    use PageIdAwareTrait;
+
     public function __construct(
         NotebookId $notebookId,
         PageId $pageId,
         protected Text $text,
     )
     {
-        parent::__construct($notebookId, $pageId);
+        parent::__construct($notebookId);
+        $this->setPageId($pageId);
     }
 
     public static function denormalize(array $data): static
