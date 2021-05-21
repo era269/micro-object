@@ -22,12 +22,4 @@ trait MessageTrait
     {
         $this->id = $id;
     }
-
-    /**
-     * @return array<string, mixed>
-     */
-    protected function getNormalized(): array
-    {
-        return $this->getAutoNormalized();
-    }
 }

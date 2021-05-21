@@ -7,6 +7,7 @@ namespace Era269\Microobject\Tests\Message\Event;
 use Era269\Microobject\IdentifierInterface;
 use Era269\Microobject\Message\Event\EventStream;
 use Era269\Microobject\Message\EventInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class EventStreamTest extends TestCase
@@ -16,6 +17,11 @@ class EventStreamTest extends TestCase
      * @var EventInterface[]
      */
     private array $events;
+    private MockObject|IdentifierInterface $domainModelId;
+    /**
+     * @var EventInterface[]
+     */
+    private array $initialEvents;
 
     public function test(): void
     {
@@ -23,11 +29,12 @@ class EventStreamTest extends TestCase
             $this->eventStream->attach($event);
         }
         $count = 0;
-        foreach ($this->eventStream as $item) {
+        foreach ($this->eventStream as $key => $item) {
             self::assertInstanceOf(EventInterface::class, $item);
             $count++;
         }
-        self::assertEquals(count($this->events) + 1, $count);
+        self::assertEquals(count($this->events) + count($this->initialEvents), $count);
+        self::assertSame($this->domainModelId, $this->eventStream->getDomainModelId());
     }
 
     protected function setUp(): void
@@ -35,9 +42,11 @@ class EventStreamTest extends TestCase
         parent::setUp();
 
         $event = $this->createMock(EventInterface::class);
+        $this->initialEvents = [$event];
+        $this->domainModelId = $this->createMock(IdentifierInterface::class);
         $this->eventStream = new EventStream(
-            $this->createMock(IdentifierInterface::class),
-            $event
+            $this->domainModelId,
+            ...$this->initialEvents
         );
         $this->events = [
             clone $event,
