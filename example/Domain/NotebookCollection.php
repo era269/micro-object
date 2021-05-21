@@ -7,10 +7,10 @@ use Era269\Microobject\AbstractMicroobjectCollection;
 use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCommand;
 use Era269\Microobject\Example\Domain\Message\Notebook\NotebookMessageInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
+use Era269\Microobject\Example\Domain\Message\Response\BaseResponse;
+use Era269\Microobject\Example\Domain\Message\Response\NullResponse;
 use Era269\Microobject\Example\Domain\Notebook\NotebookFactoryInterface;
 use Era269\Microobject\Example\Domain\Notebook\NotebookRepositoryInterface;
-use Era269\Microobject\Message\Response\BaseResponse;
-use Era269\Microobject\Message\Response\NullResponse;
 use Era269\Microobject\Message\ResponseInterface;
 
 final class NotebookCollection extends AbstractMicroobjectCollection implements NotebookCollectionInterface

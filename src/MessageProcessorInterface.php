@@ -1,16 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Era269\Microobject;
 
-use Era269\Microobject\Exception\MicroobjectExceptionInterface;
-use Era269\Microobject\Exception\MicroobjectRuntimeException;
+use Era269\Microobject\Message\ResponseInterface;
 
-interface MessageProcessorInterface
+interface MessageProcessorInterface extends \Era269\MessageProcessor\MessageProcessorInterface
 {
     /**
-     * @throws MicroobjectExceptionInterface
-     * @throws MicroobjectRuntimeException
+     * @inheritDoc
      */
-    public function process(MessageInterface $message): MessageInterface;
+    public function process(\Era269\MessageProcessor\MessageInterface $message): ResponseInterface;
 }

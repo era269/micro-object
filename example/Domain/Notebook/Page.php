@@ -9,11 +9,11 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\CreatePageCo
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Event\LineAddedEvent;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Event\PageCreatedEvent;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetTextQuery;
+use Era269\Microobject\Example\Domain\Message\Response\BaseResponse;
+use Era269\Microobject\Example\Domain\Message\Response\NullResponse;
 use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
 use Era269\Microobject\Example\Domain\Notebook\Page\Text;
 use Era269\Microobject\Message\Event\EventStreamInterface;
-use Era269\Microobject\Message\Response\BaseResponse;
-use Era269\Microobject\Message\Response\NullResponse;
 use Era269\Microobject\Message\ResponseInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 

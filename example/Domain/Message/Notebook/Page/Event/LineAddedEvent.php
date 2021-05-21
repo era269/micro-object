@@ -3,14 +3,16 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Page\Event;
 
-use DateTimeInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\AbstractPageMessage;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Command\AddLineCommand;
+use Era269\Microobject\Example\Domain\Message\Traits\OccurredAtAwareTrait;
 use Era269\Microobject\IdentifierInterface;
 use Era269\Microobject\Message\EventInterface;
 
 final class LineAddedEvent extends AbstractPageMessage implements EventInterface
 {
+    use OccurredAtAwareTrait;
+
     protected string $line;
 
     public function __construct(AddLineCommand $command)
@@ -20,16 +22,12 @@ final class LineAddedEvent extends AbstractPageMessage implements EventInterface
             $command->getPageId()
         );
         $this->line = $command->getLine();
+        $this->setOccurredAt();
     }
 
     public function getDomainModelId(): IdentifierInterface
     {
         return $this->getPageId();
-    }
-
-    public function getOccurredAt(): DateTimeInterface
-    {
-        return $this->getCreatedAt();
     }
 
     public function getLine(): string

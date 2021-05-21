@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Domain\Notebook\Page;
 
-use Era269\Microobject\Identifier\BaseIdentifier;
+use Era269\Microobject\Example\Domain\Identifier\BaseIdentifier;
 
 final class PageId extends BaseIdentifier
 {

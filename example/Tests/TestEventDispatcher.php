@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Era269\Microobject\Example\Tests;
 
 use Era269\Microobject\Message\EventInterface;
-use Era269\Microobject\MessageProcessorInterface;
+use Era269\MessageProcessor\MessageProcessorInterface;
 use LogicException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
