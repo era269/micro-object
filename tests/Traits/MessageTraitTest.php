@@ -26,11 +26,6 @@ class MessageTraitTest extends TestCase
             {
                 $this->setId($id);
             }
-
-            protected function getNormalized(): array
-            {
-                return $this->getAutoNormalized();
-            }
         };
 
         self::assertEquals(
