@@ -10,7 +10,7 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageCollectionMessag
 use Era269\Microobject\Example\Domain\Notebook\NotebookId;
 use Era269\Microobject\Example\Domain\Notebook\PageCollectionInterface;
 use Era269\Microobject\Message\Event\EventStreamInterface;
-use Era269\Microobject\Message\ResponseInterface;
+use Era269\Microobject\MessageInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class Notebook extends AbstractMicroobject implements NotebookInterface
@@ -49,9 +49,7 @@ final class Notebook extends AbstractMicroobject implements NotebookInterface
             $eventDispatcher,
             $pages
         );
-        foreach ($eventStream as $event) {
-            $self->apply($event);
-        }
+        $self->apply(...$eventStream);
 
         return $self;
     }
@@ -59,12 +57,15 @@ final class Notebook extends AbstractMicroobject implements NotebookInterface
     /**
      * @inheritDoc
      */
-    public function processPageCollectionMessages(PageCollectionMessageInterface $message): ResponseInterface
+    public function processPageCollectionMessages(PageCollectionMessageInterface $message): MessageInterface
     {
         return $this->pages
             ->process($message);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getNormalized(): array
     {
         return [
@@ -73,6 +74,9 @@ final class Notebook extends AbstractMicroobject implements NotebookInterface
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getId(): NotebookId
     {
         return $this->id;

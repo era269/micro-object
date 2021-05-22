@@ -6,19 +6,18 @@ namespace Era269\Microobject\Traits;
 
 use Era269\MessageProcessor\MessageInterface;
 use Era269\MessageProcessor\Traits\Aware\ProcessMessageMethodMapAwareTrait;
-use Era269\Microobject\Example\Domain\Message\Response\NullResponse;
-use Era269\Microobject\Message\ResponseInterface;
+use Era269\Microobject\Message\NullMessage;
 
 trait CanProcessMessageTrait
 {
     use ProcessMessageMethodMapAwareTrait;
 
-    public function process(MessageInterface $message): ResponseInterface
+    public function process(MessageInterface $message): \Era269\Microobject\MessageInterface
     {
         $methodName = $this->getProcessMessageMethodMap()
             ->getMethodNames($message)[0];
 
         return $this->{$methodName}($message)
-            ?? new NullResponse();
+            ?? new NullMessage();
     }
 }

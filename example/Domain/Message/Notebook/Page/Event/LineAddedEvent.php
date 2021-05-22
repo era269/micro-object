@@ -25,6 +25,9 @@ final class LineAddedEvent extends AbstractPageMessage implements EventInterface
         $this->setOccurredAt();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getDomainModelId(): IdentifierInterface
     {
         return $this->getPageId();

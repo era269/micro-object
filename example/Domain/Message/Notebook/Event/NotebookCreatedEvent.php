@@ -22,6 +22,9 @@ final class NotebookCreatedEvent extends AbstractNotebookMessage implements Even
         $this->setOccurredAt();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getDomainModelId(): IdentifierInterface
     {
         return $this->getNotebookId();

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Domain\Message\Notebook\Page\Command;
 
+use Era269\Microobject\Example\Domain\Message\CommandInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\AbstractPageMessage;
 use Era269\Microobject\Example\Domain\Notebook\NotebookId;
 use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
-use Era269\Microobject\Message\Request\CommandInterface;
 use Era269\Normalizable\DenormalizableInterface;
 
 final class AddLineCommand extends AbstractPageMessage implements CommandInterface, DenormalizableInterface
@@ -21,6 +21,9 @@ final class AddLineCommand extends AbstractPageMessage implements CommandInterfa
         parent::__construct($notebookId, $pageId);
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function denormalize(array $data): static
     {
         return new self(

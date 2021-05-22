@@ -25,6 +25,9 @@ final class PageCreatedEvent extends AbstractPageMessage implements EventInterfa
         $this->setOccurredAt();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getDomainModelId(): IdentifierInterface
     {
         return $this->getPageId();

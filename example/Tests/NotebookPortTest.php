@@ -26,7 +26,6 @@ class NotebookPortTest extends TestCase
     private const UNIQUE_ID_NOTEBOOK = 'notebook-unique-id';
     private const UNIQUE_ID_PAGE     = '1';
     private const WRONG_ID_PAGE      = '-1';
-
     private TestEventDispatcher $eventDispatcher;
 
     /**
@@ -40,6 +39,39 @@ class NotebookPortTest extends TestCase
             ->getNotebook([
                 'notebookId' => self::UNIQUE_ID_NOTEBOOK,
             ]);
+    }
+
+    private function getAutowiredNotebookPort(EventStorageInterface $eventStorage): NotebooksPort
+    {
+        return new NotebooksPort(
+            $this->getAutowiredNotebookCollectionFactory($eventStorage)
+        );
+    }
+
+    private function getAutowiredNotebookCollectionFactory(EventStorageInterface $eventStorage): NotebookCollectionFactory
+    {
+        $this->eventDispatcher = new TestEventDispatcher(
+            [
+                new PersistenceListener(
+                    $eventStorage
+                ),
+            ]);
+
+        $pageFactory = new PageFactory(
+            $this->eventDispatcher
+        );
+        $notebookFactory = new Notebook\NotebookFactory(
+            $this->eventDispatcher,
+            new PageCollection(
+                new PageRepository($eventStorage, $pageFactory),
+                $pageFactory
+            )
+        );
+
+        return new NotebookCollectionFactory(
+            new NotebookRepository($eventStorage, $notebookFactory),
+            $notebookFactory
+        );
     }
 
     /**
@@ -150,14 +182,35 @@ class NotebookPortTest extends TestCase
      */
     public function testAddLine(EventStorageInterface $eventStorage): EventStorageInterface
     {
-        $this->getAutowiredNotebookPort($eventStorage)
+        $line = 'third line';
+        $result = $this->getAutowiredNotebookPort($eventStorage)
             ->addLine([
                 'notebookId' => self::UNIQUE_ID_NOTEBOOK,
                 'pageId' => self::UNIQUE_ID_PAGE,
-                'line' => 'third line',
+                'line' => $line,
             ]);
 
         $this->assertEventDispatched(LineAddedEvent::class);
+
+        self::assertArrayHasKey('id', $result);
+        self::assertArrayHasKey('occurredAt', $result);
+
+        self::assertEquals(
+            'LineAddedEvent',
+            $result['@type']
+        );
+        self::assertEquals(
+            $line,
+            $result['line']
+        );
+        self::assertEquals(
+            self::UNIQUE_ID_NOTEBOOK,
+            $result['notebookId']['value']
+        );
+        self::assertEquals(
+            self::UNIQUE_ID_PAGE,
+            $result['pageId']['value']
+        );
 
         return $eventStorage;
     }
@@ -197,38 +250,5 @@ class NotebookPortTest extends TestCase
                 new Notebook\NotebookId(self::UNIQUE_ID_NOTEBOOK),
                 new Notebook\Page\PageId(self::UNIQUE_ID_PAGE),
             ));
-    }
-
-    private function getAutowiredNotebookPort(EventStorageInterface $eventStorage): NotebooksPort
-    {
-        return new NotebooksPort(
-            $this->getAutowiredNotebookCollectionFactory($eventStorage)
-        );
-    }
-
-    private function getAutowiredNotebookCollectionFactory(EventStorageInterface $eventStorage): NotebookCollectionFactory
-    {
-        $this->eventDispatcher = new TestEventDispatcher(
-            [
-                new PersistenceListener(
-                    $eventStorage
-                ),
-            ]);
-
-        $pageFactory = new PageFactory(
-            $this->eventDispatcher
-        );
-        $notebookFactory = new Notebook\NotebookFactory(
-            $this->eventDispatcher,
-            new PageCollection(
-                new PageRepository($eventStorage, $pageFactory),
-                $pageFactory
-            )
-        );
-
-        return new NotebookCollectionFactory(
-            new NotebookRepository($eventStorage, $notebookFactory),
-            $notebookFactory
-        );
     }
 }

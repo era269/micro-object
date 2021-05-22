@@ -10,11 +10,11 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\Event\LineAddedEvent
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Event\PageCreatedEvent;
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetTextQuery;
 use Era269\Microobject\Example\Domain\Message\Response\BaseResponse;
-use Era269\Microobject\Example\Domain\Message\Response\NullResponse;
+use Era269\Microobject\Example\Domain\Message\ResponseInterface;
 use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
 use Era269\Microobject\Example\Domain\Notebook\Page\Text;
 use Era269\Microobject\Message\Event\EventStreamInterface;
-use Era269\Microobject\Message\ResponseInterface;
+use Era269\Microobject\Message\EventInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class Page extends AbstractMicroobject implements PageInterface
@@ -57,15 +57,22 @@ final class Page extends AbstractMicroobject implements PageInterface
         return $self;
     }
 
-    public function addLine(AddLineCommand $command): ResponseInterface
+    /**
+     * @inheritDoc
+     */
+    public function addLine(AddLineCommand $command): EventInterface
     {
+        $event = new LineAddedEvent($command);
         $this->applyAndPublish(
-            new LineAddedEvent($command)
+            $event
         );
 
-        return new NullResponse();
+        return $event;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getText(GetTextQuery $query): ResponseInterface
     {
         return new BaseResponse($this->text);

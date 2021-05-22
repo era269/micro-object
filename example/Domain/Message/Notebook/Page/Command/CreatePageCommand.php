@@ -24,6 +24,9 @@ final class CreatePageCommand extends AbstractPageCollectionMessage implements D
         $this->setPageId($pageId);
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function denormalize(array $data): static
     {
         return new self(

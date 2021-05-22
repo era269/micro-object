@@ -19,6 +19,9 @@ final class NotebookFactory implements NotebookFactoryInterface
     {
     }
 
+    /**
+     * @inheritDoc
+     */
     public function createNotebook(CreateNotebookCommand $command): NotebookInterface
     {
         return Notebook::create(
@@ -28,6 +31,9 @@ final class NotebookFactory implements NotebookFactoryInterface
         );
     }
 
+    /**
+     * @inheritDoc
+     */
     public function reconstituteNotebook(EventStreamInterface $eventStream): NotebookInterface
     {
         return Notebook::reconstitute(
