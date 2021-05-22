@@ -20,6 +20,9 @@ final class GetPageQuery extends AbstractPageCollectionMessage implements PageId
         $this->setPageId($pageId);
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function denormalize(array $data): static
     {
         return new self(

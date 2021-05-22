@@ -19,6 +19,9 @@ final class PageFactory implements PageFactoryInterface
     {
     }
 
+    /**
+     * @inheritDoc
+     */
     public function createPage(CreatePageCommand $command): PageInterface
     {
         return Page::create(
@@ -27,6 +30,9 @@ final class PageFactory implements PageFactoryInterface
         );
     }
 
+    /**
+     * @inheritDoc
+     */
     public function reconstitutePage(EventStreamInterface $eventStream): PageInterface
     {
         return Page::reconstitute(

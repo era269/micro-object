@@ -22,6 +22,9 @@ final class CreateNotebookCommand extends AbstractNotebookCollectionMessage impl
         $this->setNotebookId($notebookId);
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function denormalize(array $data): static
     {
         return new self(

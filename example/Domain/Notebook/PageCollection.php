@@ -10,8 +10,9 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageMessageInterface
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetPageQuery;
 use Era269\Microobject\Example\Domain\Message\Response\BaseResponse;
 use Era269\Microobject\Example\Domain\Message\Response\NullResponse;
+use Era269\Microobject\Example\Domain\Message\ResponseInterface;
 use Era269\Microobject\Example\Domain\Notebook\Page\PageRepositoryInterface;
-use Era269\Microobject\Message\ResponseInterface;
+use Era269\Microobject\MessageInterface;
 
 final class PageCollection extends AbstractMicroobjectCollection implements PageCollectionInterface
 {
@@ -34,6 +35,9 @@ final class PageCollection extends AbstractMicroobjectCollection implements Page
         );
     }
 
+    /**
+     * @inheritDoc
+     */
     public function attachPage(CreatePageCommand $command): ResponseInterface
     {
         $this->pageFactory->createPage(
@@ -43,7 +47,10 @@ final class PageCollection extends AbstractMicroobjectCollection implements Page
         return new NullResponse();
     }
 
-    public function processPageMessages(PageMessageInterface $message): ResponseInterface
+    /**
+     * @inheritDoc
+     */
+    public function processPageMessages(PageMessageInterface $message): MessageInterface
     {
         return $this->repository->get($message->getPageId())
             ->process($message);

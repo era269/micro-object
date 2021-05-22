@@ -19,6 +19,9 @@ final class GetNotebookQuery extends AbstractNotebookCollectionMessage implement
         $this->setNotebookId($notebookId);
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function denormalize(array $data): static
     {
         return new self(

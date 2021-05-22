@@ -8,10 +8,11 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCom
 use Era269\Microobject\Example\Domain\Message\Notebook\NotebookMessageInterface;
 use Era269\Microobject\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
 use Era269\Microobject\Example\Domain\Message\Response\BaseResponse;
-use Era269\Microobject\Example\Domain\Message\Response\NullResponse;
+use Era269\Microobject\Example\Domain\Message\ResponseInterface;
 use Era269\Microobject\Example\Domain\Notebook\NotebookFactoryInterface;
 use Era269\Microobject\Example\Domain\Notebook\NotebookRepositoryInterface;
-use Era269\Microobject\Message\ResponseInterface;
+use Era269\Microobject\Message\NullMessage;
+use Era269\Microobject\MessageInterface;
 
 final class NotebookCollection extends AbstractMicroobjectCollection implements NotebookCollectionInterface
 {
@@ -53,16 +54,22 @@ final class NotebookCollection extends AbstractMicroobjectCollection implements 
         );
     }
 
-    public function attachNotebook(CreateNotebookCommand $command): ResponseInterface
+    /**
+     * @inheritDoc
+     */
+    public function attachNotebook(CreateNotebookCommand $command): MessageInterface
     {
         $this->notebookFactory->createNotebook(
             $command
         );
 
-        return new NullResponse();
+        return new NullMessage();
     }
 
-    public function processNotebookMessage(NotebookMessageInterface $message): ResponseInterface
+    /**
+     * @inheritDoc
+     */
+    public function processNotebookMessage(NotebookMessageInterface $message): MessageInterface
     {
         $notebook = $this->notebookRepository->get(
             $message->getNotebookId()

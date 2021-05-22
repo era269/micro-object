@@ -10,6 +10,9 @@ use Era269\Normalizable\DenormalizableInterface;
 
 final class GetTextQuery extends AbstractPageMessage implements DenormalizableInterface
 {
+    /**
+     * @inheritDoc
+     */
     public static function denormalize(array $data): static
     {
         return new self(
