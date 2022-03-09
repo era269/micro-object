@@ -8,8 +8,9 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\PageMessageInterface
 use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetPageQuery;
 use Era269\Microobject\MessageInterface;
 use Era269\Microobject\MicroobjectCollectionInterface;
+use Era269\Normalizable\NormalizableInterface;
 
-interface PageCollectionInterface extends MicroobjectCollectionInterface
+interface PageCollectionInterface extends MicroobjectCollectionInterface, NormalizableInterface
 {
     public function getPage(GetPageQuery $query): MessageInterface;
 

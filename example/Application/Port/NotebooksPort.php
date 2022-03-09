@@ -11,14 +11,15 @@ use Era269\Microobject\Example\Domain\Message\Notebook\Page\Query\GetTextQuery;
 use Era269\Microobject\Example\Domain\Message\Notebook\Query\GetNotebookQuery;
 use Era269\Microobject\Example\Domain\Notebook\NotebookCollectionFactory;
 use Era269\Microobject\Exception\MicroobjectExceptionInterface;
+use Era269\Normalizable\NormalizerInterface;
 
 final class NotebooksPort
 {
-    private NotebookCollectionFactory $notebookCollectionFactory;
-
-    public function __construct(NotebookCollectionFactory $notebookCollectionFactory)
+    public function __construct(
+        private NotebookCollectionFactory $notebookCollectionFactory,
+        private NormalizerInterface $normalizer
+    )
     {
-        $this->notebookCollectionFactory = $notebookCollectionFactory;
     }
 
     /**
@@ -26,9 +27,7 @@ final class NotebooksPort
      *
      * @param array<string, mixed> $request
      *
-     * @return array<string, mixed>
-     *
-     * @throws MicroobjectExceptionInterface
+     * @return array<int|string, mixed>
      */
     public function addNotebook(array $request): array
     {
@@ -45,9 +44,7 @@ final class NotebooksPort
      *
      * @param array<string, mixed> $request
      *
-     * @return array<string, mixed>
-     *
-     * @throws MicroobjectExceptionInterface
+     * @return array<int|string, mixed>
      */
     public function addPage(array $request): array
     {
@@ -64,9 +61,7 @@ final class NotebooksPort
      *
      * @param array<string, mixed> $request
      *
-     * @return array<string, mixed>
-     *
-     * @throws MicroobjectExceptionInterface
+     * @return array<int|string, mixed>
      */
     public function addLine(array $request): array
     {
@@ -83,9 +78,7 @@ final class NotebooksPort
      *
      * @param array<string, mixed> $request
      *
-     * @return array<string, mixed>
-     *
-     * @throws MicroobjectExceptionInterface
+     * @return array<int|string, mixed>
      */
     public function getText(array $request): array
     {
@@ -102,9 +95,7 @@ final class NotebooksPort
      *
      * @param array<string, mixed> $request
      *
-     * @return array<string, mixed>
-     *
-     * @throws MicroobjectExceptionInterface
+     * @return array<int|string, mixed>
      */
     public function getPage(array $request): array
     {
@@ -121,9 +112,7 @@ final class NotebooksPort
      *
      * @param array<string, mixed> $request
      *
-     * @return array<string, mixed>
-     *
-     * @throws MicroobjectExceptionInterface
+     * @return array<int|string, mixed>
      */
     public function getNotebook(array $request): array
     {

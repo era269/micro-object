@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Era269\Microobject\Traits;
 
 use Era269\Microobject\IdentifierInterface;
-use Era269\Normalizable\Traits\SimpleNormalizableTrait;
 
 trait MessageTrait
 {
-    use SimpleNormalizableTrait;
-
-    protected IdentifierInterface $id;
+    private IdentifierInterface $id;
 
     public function getId(): IdentifierInterface
     {

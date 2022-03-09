@@ -15,10 +15,13 @@ use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
 use Era269\Microobject\Example\Domain\Notebook\Page\Text;
 use Era269\Microobject\Message\Event\EventStreamInterface;
 use Era269\Microobject\Message\EventInterface;
+use Era269\Normalizable\Traits\NormalizableTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class Page extends AbstractMicroobject implements PageInterface
 {
+    use NormalizableTrait;
+
     private PageId $id;
     private Text $text;
 
@@ -89,17 +92,6 @@ final class Page extends AbstractMicroobject implements PageInterface
     {
         $this->id = $event->getPageId();
         $this->text = $event->getText();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return [
-            'id' => $this->getId()->normalize(),
-            'text' => $this->text->normalize(),
-        ];
     }
 
     public function getId(): PageId

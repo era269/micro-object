@@ -5,6 +5,7 @@ namespace Era269\Microobject\Example\Domain\Message\Notebook\Event;
 
 use Era269\Microobject\Example\Domain\Message\Notebook\AbstractNotebookMessage;
 use Era269\Microobject\Example\Domain\Message\Notebook\Command\CreateNotebookCommand;
+use Era269\Normalizable\Traits\NormalizableTrait;
 use Era269\Microobject\Example\Domain\Message\Traits\OccurredAtAwareTrait;
 use Era269\Microobject\IdentifierInterface;
 use Era269\Microobject\Message\EventInterface;
@@ -12,8 +13,9 @@ use Era269\Microobject\Message\EventInterface;
 final class NotebookCreatedEvent extends AbstractNotebookMessage implements EventInterface
 {
     use OccurredAtAwareTrait;
+    use NormalizableTrait;
 
-    protected string $notebookName;
+    private string $notebookName;
 
     public function __construct(CreateNotebookCommand $command)
     {

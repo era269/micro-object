@@ -7,7 +7,7 @@ use Era269\Microobject\Example\Domain\Notebook\NotebookId;
 
 trait NotebookIdAwareTrait
 {
-    protected NotebookId $notebookId;
+    private NotebookId $notebookId;
 
     public function getNotebookId(): NotebookId
     {

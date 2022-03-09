@@ -8,14 +8,16 @@ use Era269\Microobject\Example\Domain\Notebook\NotebookId;
 use Era269\Microobject\Example\Domain\Notebook\NotebookIdAwareInterface;
 use Era269\Microobject\Example\Domain\Notebook\Traits\NotebookIdAwareTrait;
 use Era269\Normalizable\DenormalizableInterface;
+use Era269\Normalizable\Traits\NormalizableTrait;
 
 final class CreateNotebookCommand extends AbstractNotebookCollectionMessage implements NotebookIdAwareInterface, DenormalizableInterface
 {
     use NotebookIdAwareTrait;
+    use NormalizableTrait;
 
     public function __construct(
         NotebookId $notebookId,
-        protected string $notebookName
+        private string $notebookName
     )
     {
         parent::__construct();

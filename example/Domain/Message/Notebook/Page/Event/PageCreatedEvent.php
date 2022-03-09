@@ -14,7 +14,7 @@ final class PageCreatedEvent extends AbstractPageMessage implements EventInterfa
 {
     use OccurredAtAwareTrait;
 
-    protected Text $text;
+    private Text $text;
 
     public function __construct(
         CreatePageCommand $command

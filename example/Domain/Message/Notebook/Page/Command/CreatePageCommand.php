@@ -9,15 +9,17 @@ use Era269\Microobject\Example\Domain\Notebook\Page\PageId;
 use Era269\Microobject\Example\Domain\Notebook\Page\Text;
 use Era269\Microobject\Example\Domain\Notebook\Page\Traits\PageIdAwareTrait;
 use Era269\Normalizable\DenormalizableInterface;
+use Era269\Normalizable\Traits\NormalizableTrait;
 
 final class CreatePageCommand extends AbstractPageCollectionMessage implements DenormalizableInterface
 {
     use PageIdAwareTrait;
+    use NormalizableTrait;
 
     public function __construct(
         NotebookId $notebookId,
         PageId $pageId,
-        protected Text $text,
+        private Text $text,
     )
     {
         parent::__construct($notebookId);

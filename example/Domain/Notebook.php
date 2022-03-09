@@ -11,10 +11,13 @@ use Era269\Microobject\Example\Domain\Notebook\NotebookId;
 use Era269\Microobject\Example\Domain\Notebook\PageCollectionInterface;
 use Era269\Microobject\Message\Event\EventStreamInterface;
 use Era269\Microobject\MessageInterface;
+use Era269\Normalizable\Traits\NormalizableTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class Notebook extends AbstractMicroobject implements NotebookInterface
 {
+    use NormalizableTrait;
+
     private string $name;
     private PageCollectionInterface $pages;
     private NotebookId $id;
@@ -61,17 +64,6 @@ final class Notebook extends AbstractMicroobject implements NotebookInterface
     {
         return $this->pages
             ->process($message);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNormalized(): array
-    {
-        return [
-            'id' => $this->getId()->normalize(),
-            'name' => $this->name,
-        ];
     }
 
     /**
