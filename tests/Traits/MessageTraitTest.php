@@ -28,13 +28,6 @@ class MessageTraitTest extends TestCase
             }
         };
 
-        self::assertEquals(
-            [
-                '@type' => $message::class,
-                'id' => $normalizedId
-            ],
-            $message->normalize()
-        );
         self::assertSame(
             $id,
             $message->getId()

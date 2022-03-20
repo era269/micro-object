@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Era269\Microobject\Example\Domain\Notebook\Page;
 
-use Era269\Normalizable\Abstraction\AbstractNormalizable;
+use Era269\Microobject\Example\Domain\NormalizableInterface;
+use Era269\Normalizable\Traits\NormalizableTrait;
 use Stringable;
 
-final class Text extends AbstractNormalizable implements Stringable
+final class Text implements Stringable, NormalizableInterface
 {
+    use NormalizableTrait;
+
     /**
      * @var string[]
      */
@@ -32,15 +35,8 @@ final class Text extends AbstractNormalizable implements Stringable
     /**
      * @inheritDoc
      */
-    public function __toString()
+    public function __toString(): string
     {
         return implode("\n", $this->lines);
-    }
-
-    protected function getNormalized(): array
-    {
-        return [
-            'lines' => $this->lines,
-        ];
     }
 }

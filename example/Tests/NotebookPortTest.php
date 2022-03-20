@@ -18,19 +18,37 @@ use Era269\Microobject\Example\Infrastructure\Repository\PageRepository;
 use Era269\Microobject\Exception\MicroobjectExceptionInterface;
 use Era269\Microobject\Exception\MicroobjectOutOfBoundsException;
 use Era269\Microobject\Message\Event\EventStorageInterface;
+use Era269\Normalizable\KeyDecorator\AsIsKeyDecorator;
+use Era269\Normalizable\KeyDecoratorInterface;
+use Era269\Normalizable\Normalizer\ArrayNormalizer;
+use Era269\Normalizable\Normalizer\FailNormalizer;
+use Era269\Normalizable\Normalizer\ListNormalizableToNormalizableAdapterNormalizer;
+use Era269\Normalizable\Normalizer\NormalizableNormalizer;
+use Era269\Normalizable\Normalizer\NormalizationFacade;
+use Era269\Normalizable\Normalizer\ScalarableNormalizer;
+use Era269\Normalizable\Normalizer\ScalarNormalizer;
+use Era269\Normalizable\Normalizer\StringableNormalizer;
+use Era269\Normalizable\Normalizer\WithTypeNormalizableNormalizerDecorator;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 
 class NotebookPortTest extends TestCase
 {
-    private const UNIQUE_ID_NOTEBOOK = 'notebook-unique-id';
-    private const UNIQUE_ID_PAGE     = '1';
-    private const WRONG_ID_PAGE      = '-1';
+    private const UNIQUE_ID_NOTEBOOK     = 'notebook-unique-id';
+    private const UNIQUE_ID_PAGE         = '1';
+    private const WRONG_ID_PAGE          = '-1';
+
+    private const NORMALIZED_PAYLOAD     = 'payload';
+    private const NORMALIZED_ID          = 'id';
+    private const NORMALIZED_VALUE       = 'value';
+    private const NORMALIZED_OCCURRED_AT = 'occurredAt';
+    private const NORMALIZED_NOTEBOOK_ID = 'notebookId';
+    private const NORMALIZED_PAGE_ID     = 'pageId';
+    private const NORMALIZED_LINES       = 'lines';
+    private const NORMALIZED_LINE        = 'line';
+
     private TestEventDispatcher $eventDispatcher;
 
-    /**
-     * @throws MicroobjectExceptionInterface
-     */
     public function testGetUnExistingNotebook(): void
     {
         $this->expectException(MicroobjectOutOfBoundsException::class);
@@ -44,7 +62,21 @@ class NotebookPortTest extends TestCase
     private function getAutowiredNotebookPort(EventStorageInterface $eventStorage): NotebooksPort
     {
         return new NotebooksPort(
-            $this->getAutowiredNotebookCollectionFactory($eventStorage)
+            $this->getAutowiredNotebookCollectionFactory($eventStorage),
+            new NormalizationFacade(
+                new AsIsKeyDecorator(),
+                [
+                    new ScalarNormalizer(),
+                    new ArrayNormalizer(),
+                    new ListNormalizableToNormalizableAdapterNormalizer(),
+                    new WithTypeNormalizableNormalizerDecorator(
+                        new NormalizableNormalizer()
+                    ),
+                    new ScalarableNormalizer(),
+                    new StringableNormalizer(),
+                    new FailNormalizer(),
+                ]
+            )
         );
     }
 
@@ -74,9 +106,6 @@ class NotebookPortTest extends TestCase
         );
     }
 
-    /**
-     * @throws MicroobjectExceptionInterface
-     */
     public function testAddNotebook(): EventStorageInterface
     {
         $eventStorage = new EventStorage();
@@ -99,8 +128,6 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testAddNotebook
-     *
-     * @throws MicroobjectExceptionInterface
      */
     public function testGetNotebook(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -109,16 +136,17 @@ class NotebookPortTest extends TestCase
                 'notebookId' => self::UNIQUE_ID_NOTEBOOK,
             ]);
 
-        self::assertEquals(self::UNIQUE_ID_NOTEBOOK, $normalizedNotebookResponse['payload']['id']['value']);
-        self::assertEquals(Notebook::class, $normalizedNotebookResponse['payload']['@type']);
+        self::assertEquals(
+            self::UNIQUE_ID_NOTEBOOK,
+            $normalizedNotebookResponse[self::NORMALIZED_PAYLOAD][self::NORMALIZED_ID][self::NORMALIZED_VALUE]
+        );
+        self::assertEquals('Notebook', $normalizedNotebookResponse[self::NORMALIZED_PAYLOAD]['@type']);
 
         return $eventStorage;
     }
 
     /**
      * @depends testGetNotebook
-     *
-     * @throws MicroobjectExceptionInterface
      */
     public function testAddPage(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -139,8 +167,6 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testAddPage
-     *
-     * @throws MicroobjectExceptionInterface
      */
     public function testGetPage(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -150,15 +176,16 @@ class NotebookPortTest extends TestCase
                 'pageId' => self::UNIQUE_ID_PAGE,
             ]);
 
-        self::assertEquals(self::UNIQUE_ID_PAGE, $normalizedPageResponse['payload']['id']['value']);
+        self::assertEquals(
+            self::UNIQUE_ID_PAGE,
+            $normalizedPageResponse[self::NORMALIZED_PAYLOAD][self::NORMALIZED_ID][self::NORMALIZED_VALUE]
+        );
 
         return $eventStorage;
     }
 
     /**
      * @depends testAddPage
-     *
-     * @throws MicroobjectExceptionInterface
      */
     public function testGetPageNotFound(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -170,15 +197,16 @@ class NotebookPortTest extends TestCase
                 'pageId' => self::WRONG_ID_PAGE,
             ]);
 
-        self::assertEquals(self::UNIQUE_ID_PAGE, $normalizedPageResponse['payload']['id']['value']);
+        self::assertEquals(
+            self::UNIQUE_ID_PAGE,
+            $normalizedPageResponse[self::NORMALIZED_PAYLOAD][self::NORMALIZED_ID][self::NORMALIZED_VALUE]
+        );
 
         return $eventStorage;
     }
 
     /**
      * @depends testGetPage
-     *
-     * @throws MicroobjectExceptionInterface
      */
     public function testAddLine(EventStorageInterface $eventStorage): EventStorageInterface
     {
@@ -192,8 +220,8 @@ class NotebookPortTest extends TestCase
 
         $this->assertEventDispatched(LineAddedEvent::class);
 
-        self::assertArrayHasKey('id', $result);
-        self::assertArrayHasKey('occurredAt', $result);
+        self::assertArrayHasKey(self::NORMALIZED_ID, $result);
+        self::assertArrayHasKey(self::NORMALIZED_OCCURRED_AT, $result);
 
         self::assertEquals(
             'LineAddedEvent',
@@ -201,15 +229,15 @@ class NotebookPortTest extends TestCase
         );
         self::assertEquals(
             $line,
-            $result['line']
+            $result[self::NORMALIZED_LINE]
         );
         self::assertEquals(
             self::UNIQUE_ID_NOTEBOOK,
-            $result['notebookId']['value']
+            $result[self::NORMALIZED_NOTEBOOK_ID][self::NORMALIZED_VALUE]
         );
         self::assertEquals(
             self::UNIQUE_ID_PAGE,
-            $result['pageId']['value']
+            $result[self::NORMALIZED_PAGE_ID][self::NORMALIZED_VALUE]
         );
 
         return $eventStorage;
@@ -217,8 +245,6 @@ class NotebookPortTest extends TestCase
 
     /**
      * @depends testAddLine
-     *
-     * @throws MicroobjectExceptionInterface
      */
     public function testGetText(EventStorageInterface $eventStorage): void
     {
@@ -234,7 +260,10 @@ class NotebookPortTest extends TestCase
             'third line',
         ];
 
-        self::assertEquals($expectedText, $normalizedTextResponse['payload']['lines']);
+        self::assertEquals(
+            $expectedText,
+            $normalizedTextResponse[self::NORMALIZED_PAYLOAD][self::NORMALIZED_LINES]
+        );
     }
 
     /**

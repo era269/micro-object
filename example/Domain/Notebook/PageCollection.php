@@ -55,4 +55,12 @@ final class PageCollection extends AbstractMicroobjectCollection implements Page
         return $this->repository->get($message->getPageId())
             ->process($message);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function normalize(): array
+    {
+        return [];
+    }
 }

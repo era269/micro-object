@@ -17,7 +17,6 @@ use Era269\MethodMap\MethodMapCacheDecorator;
 use Era269\MethodMap\MethodMapCollectionDecorator;
 use Era269\MethodMap\MethodMapInterface;
 use Era269\Microobject\Traits\CanProcessMessageTrait;
-use Era269\Normalizable\Traits\AbstractNormalizableTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 use ReflectionMethod;
@@ -28,7 +27,6 @@ abstract class AbstractMicroobject implements MicroobjectInterface
     use CanApplyEventsTrait;
     use CanPublishEventsTrait;
     use CanProcessMessageTrait;
-    use AbstractNormalizableTrait;
 
     public function __construct(EventDispatcherInterface $eventDispatcher, ?MethodMapInterface $processMessageMethodMap = null, ?MethodMapInterface $applyEventMethodMap = null, ?CacheInterface $cache = null)
     {
